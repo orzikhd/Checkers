@@ -14,20 +14,6 @@ public class BiColorPiece extends GamePiece {
 	 * or another as true/false
 	 */
 	public BiColorPiece(boolean color) {
-		this(color, 0, 0);
-	}
-	
-	/**
-	 * Constructs a BiColorPiece of the given color
-	 * with a default position
-	 * @param color boolean value to represent one color
-	 * or another as true/false
-	 * @param X desired initial int X coordinate
-	 * @param Y desired initial int Y coordinate
-	 * @requires X and Y should both be >= 0
-	 */
-	public BiColorPiece(boolean color, int X, int Y) {
-		super(X, Y);
 		this.color = color;
 	}
 	
