@@ -6,6 +6,12 @@ package CheckersPackage;
  * and the tile's color
  */
 public class GameTile {
+	
+	/*
+	 * Rep Invariant:
+	 * tileColor != null && tileColor within {available colors}
+	 */
+	
 	private GamePiece occupyingPiece;
 	private String tileColor;
 	

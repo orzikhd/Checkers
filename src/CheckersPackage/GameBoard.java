@@ -5,6 +5,13 @@ package CheckersPackage;
  * amount of length * length tiles.
  */
 public class GameBoard {
+	
+	/*
+	 * Rep Invariant:
+	 * for all i, j tiles[i][j] != null
+	 * and tiles[i][j] rep invariant holds true
+	 */
+	
 	private GameTile[][] tiles;
 	
 	/**
@@ -12,10 +19,10 @@ public class GameBoard {
 	 * @param length the side length of the square GameBoard
 	 */
 	public GameBoard(int length) {
-		this.tiles = new GameTile[length + 1][length + 1];
+		this.tiles = new GameTile[length][length];
 		
-		for (int i = 0; i <= length; i++) {
-			for (int j = 0; j <= length; j++) {
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
 				this.tiles[i][j] = new GameTile();
 			}
 		}
@@ -60,6 +67,20 @@ public class GameBoard {
 	 */
 	public int getLength() {
 		return this.tiles.length;
+	}
+	
+	@Override
+	public String toString() {
+		String result = "[\n";
+		
+		for (int i = 0; i < this.getLength(); i++) {
+			for (int j = 0; j < this.getLength(); j++) {
+				result += "{Color: " + this.tiles[i][j].getTileColor() + " Piece: " + this.tiles[i][j].getOccupyingPiece() + "}";
+			}
+			result += "\n";
+		}
+		
+		return result + "]";
 	}
 }
 
