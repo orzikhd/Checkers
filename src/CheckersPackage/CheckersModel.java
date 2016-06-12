@@ -52,7 +52,11 @@ public class CheckersModel {
 		for (int i = 0; i < LENGTH_CHECKERS_BOARD; i++) {
 			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
 				currPiece = (BiColorPiece) this.board.getPieceAtLocation(i, j);
-				curr = new Location(i, j, currPiece.getColor(), this.board.getColorAtLocation(i, j));
+				if (currPiece == null) {
+					curr = new Location(i, j, Location.NULL_TEAM_COLOR, this.board.getColorAtLocation(i, j));
+				} else {
+					curr = new Location(i, j, currPiece.getTeamColor(), this.board.getColorAtLocation(i, j));
+				}
 				locations.add(curr);
 			}
 		}
@@ -87,7 +91,7 @@ public class CheckersModel {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
 				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
-					curr = new BiColorPiece(true);
+					curr = new BiColorPiece(1);
 					p1Pieces.add(curr);
 					this.board.putPieceAtLocation(i, j, curr);
 				}
@@ -98,7 +102,7 @@ public class CheckersModel {
 		for (int i = 5; i < LENGTH_CHECKERS_BOARD; i++) {
 			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
 				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
-					curr = new BiColorPiece(false);
+					curr = new BiColorPiece(2);
 					p2Pieces.add(curr);
 					this.board.putPieceAtLocation(i, j, curr);
 				}

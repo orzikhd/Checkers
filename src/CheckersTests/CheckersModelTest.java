@@ -32,14 +32,14 @@ public class CheckersModelTest {
 		newModel.setUpBoard();
 
 		assertEquals(newModel.toString(), "[\n"
-				+ "{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}\n"
-				+ "{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}\n"
-				+ "{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}\n"
+				+ "{Color: R Piece: null}{Color: B Piece: team 1}{Color: R Piece: null}{Color: B Piece: team 1}{Color: R Piece: null}{Color: B Piece: team 1}{Color: R Piece: null}{Color: B Piece: team 1}\n"
+				+ "{Color: B Piece: team 1}{Color: R Piece: null}{Color: B Piece: team 1}{Color: R Piece: null}{Color: B Piece: team 1}{Color: R Piece: null}{Color: B Piece: team 1}{Color: R Piece: null}\n"
+				+ "{Color: R Piece: null}{Color: B Piece: team 1}{Color: R Piece: null}{Color: B Piece: team 1}{Color: R Piece: null}{Color: B Piece: team 1}{Color: R Piece: null}{Color: B Piece: team 1}\n"
 				+ "{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}\n"
 				+ "{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}\n"
-				+ "{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}\n"
-				+ "{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}\n"
-				+ "{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}\n"
+				+ "{Color: B Piece: team 2}{Color: R Piece: null}{Color: B Piece: team 2}{Color: R Piece: null}{Color: B Piece: team 2}{Color: R Piece: null}{Color: B Piece: team 2}{Color: R Piece: null}\n"
+				+ "{Color: R Piece: null}{Color: B Piece: team 2}{Color: R Piece: null}{Color: B Piece: team 2}{Color: R Piece: null}{Color: B Piece: team 2}{Color: R Piece: null}{Color: B Piece: team 2}\n"
+				+ "{Color: B Piece: team 2}{Color: R Piece: null}{Color: B Piece: team 2}{Color: R Piece: null}{Color: B Piece: team 2}{Color: R Piece: null}{Color: B Piece: team 2}{Color: R Piece: null}\n"
 				+ "]");
 	}
 	
@@ -53,6 +53,13 @@ public class CheckersModelTest {
 		
 		assertEquals(newModel.countPlayer1(), 0);
 		assertEquals(newModel.countPlayer2(), 0);	
+	}
+	
+	@Test
+	public void getBoardStateTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		newModel.getBoardState();
 	}
 	
 	@Test

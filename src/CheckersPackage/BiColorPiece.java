@@ -5,28 +5,34 @@ package CheckersPackage;
  * specified as one of a choice of two colors
  */
 public class BiColorPiece extends GamePiece {
-	private boolean color;
+	
+	public static final int TEAM1 = 1;
+	public static final int TEAM2 = 2;
+	private int teamColor;
 	
 	/**
 	 * Constructs a BiColorPiece of the given color
-	 * with a default position
-	 * @param color boolean value to represent one color
-	 * or another as true/false
+	 * @param teamColor one of the available team colors
+	 * @requires teamColor must be one of the available team colors
 	 */
-	public BiColorPiece(boolean color) {
-		this.color = color;
+	public BiColorPiece(int teamColor) {
+		if (teamColor != TEAM1 && teamColor != TEAM2) {
+			throw new IllegalArgumentException("Invalid team");
+		}
+		
+		this.teamColor = teamColor;
 	}
 	
 	/**
 	 * Returns color choice of this BiColorPiece
 	 * @return
 	 */
-	public boolean getColor() {
-		return this.color;
+	public int getTeamColor() {
+		return this.teamColor;
 	}
 	
 	@Override
 	public String toString() {
-		return "team " + this.color;
+		return "team " + this.teamColor;
 	}
 }

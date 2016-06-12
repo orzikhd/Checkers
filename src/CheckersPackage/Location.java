@@ -12,9 +12,14 @@ public class Location {
 	 * X >= 0 and Y >= 0
 	 */
 	
+	/**
+	 * Color for locations where a piece does not exist
+	 */
+	public static final int NULL_TEAM_COLOR = 0;
+	
 	private int X;
 	private int Y;
-	private boolean PieceColorFlag;
+	private int pieceTeamColor;
 	private String tileColor;
 	
 	/**
@@ -25,14 +30,14 @@ public class Location {
 	 * 	as a true/false value
 	 * @requires X >= 0 and Y >= 0
 	 */
-	public Location(int X, int Y, boolean colorFlag, String tileColor) {
+	public Location(int X, int Y, int pieceTeamColor, String tileColor) {
 		if (X < 0 || Y < 0) {
 			throw new IllegalArgumentException("Location component should be 0 or positive");
 		}
 		
 		this.X = X;
 		this.Y = Y;
-		this.PieceColorFlag = colorFlag;
+		this.pieceTeamColor = pieceTeamColor;
 		this.tileColor = tileColor;
 	}
 	
@@ -44,8 +49,8 @@ public class Location {
 		return this.Y;
 	}
 	
-	public boolean getPieceColor() {
-		return this.PieceColorFlag;
+	public int getPieceTeamColor() {
+		return this.pieceTeamColor;
 	}
 	
 	public String getTileColor() {
