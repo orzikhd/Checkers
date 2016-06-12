@@ -1,6 +1,8 @@
 package CheckersPackage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,7 +20,7 @@ public class CheckersModel {
 	 * @param length of checkers board
 	 */
 	public CheckersModel() {
-		this.board = new CheckersBoard(LENGTH_CHECKERS_BOARD, "RED", "BLACK");
+		this.board = new CheckersBoard(LENGTH_CHECKERS_BOARD, "R", "B");
 		
 		this.p1Pieces = new HashSet<BiColorPiece>();
 		this.p2Pieces = new HashSet<BiColorPiece>();
@@ -41,8 +43,21 @@ public class CheckersModel {
 	}
 	
 	
-	public Set<Location> getBoardState() {
-		return null;
+	public List<Location> getBoardState() {
+		
+		List<Location> locations = new ArrayList<>();
+		
+		Location curr;
+		BiColorPiece currPiece;
+		for (int i = 0; i < LENGTH_CHECKERS_BOARD; i++) {
+			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
+				currPiece = (BiColorPiece) this.board.getPieceAtLocation(i, j);
+				curr = new Location(i, j, currPiece.getColor(), this.board.getColorAtLocation(i, j));
+				locations.add(curr);
+			}
+		}
+		
+		return locations;
 	}
 	
 	/**

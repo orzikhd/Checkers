@@ -18,17 +18,17 @@ public class GameTile {
 	/**
 	 * Red Color Designation
 	 */
-	public static final String TILE_RED = new String("RED");
+	public static final String TILE_RED = new String("R");
 	
 	/**
 	 * Black Color Designation
 	 */
-	public static final String TILE_BLACK = new String("BLACK");
+	public static final String TILE_BLACK = new String("B");
 	
 	/**
 	 * White Color Designation
 	 */
-	public static final String TILE_WHITE = new String("WHITE");
+	public static final String TILE_WHITE = new String("W");
 	
 	/**
 	 * Constructs a new GameTile of the default color 

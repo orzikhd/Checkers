@@ -11,27 +11,27 @@ public class GameBoardTest {
 	@Test
 	public void constructSmallBoardTest() {
 		@SuppressWarnings("unused")
-		GameBoard newBoard = new CheckersBoard(4, "RED", "BLACK");
+		GameBoard newBoard = new CheckersBoard(4, "R", "B");
 	}
 	
 	@Test
 	public void constructLargeBoardTest() {
 		@SuppressWarnings("unused")
-		GameBoard newBoard = new CheckersBoard(16, "RED", "BLACK");
+		GameBoard newBoard = new CheckersBoard(16, "R", "B");
 	}
 	
 	@Test
 	public void getLengthBoardTest() {
-		GameBoard newBoard = new CheckersBoard(4, "RED", "BLACK");
+		GameBoard newBoard = new CheckersBoard(4, "R", "B");
 		assertEquals(newBoard.getLength(), 4);
 	}
 	
 	@Test
 	public void printSmallBoardTest() {
-		GameBoard newBoard = new CheckersBoard(2, "RED", "BLACK");
+		GameBoard newBoard = new CheckersBoard(2, "R", "B");
 		assertEquals(newBoard.toString(), "[\n"
-				+ "{Color: RED Piece: null}{Color: BLACK Piece: null}\n"
-				+ "{Color: BLACK Piece: null}{Color: RED Piece: null}\n"
+				+ "{Color: R Piece: null}{Color: B Piece: null}\n"
+				+ "{Color: B Piece: null}{Color: R Piece: null}\n"
 				+ "]");
 	}
 }

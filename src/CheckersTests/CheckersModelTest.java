@@ -32,14 +32,14 @@ public class CheckersModelTest {
 		newModel.setUpBoard();
 
 		assertEquals(newModel.toString(), "[\n"
-				+ "{Color: RED Piece: null}{Color: BLACK Piece: team true}{Color: RED Piece: null}{Color: BLACK Piece: team true}{Color: RED Piece: null}{Color: BLACK Piece: team true}{Color: RED Piece: null}{Color: BLACK Piece: team true}\n"
-				+ "{Color: BLACK Piece: team true}{Color: RED Piece: null}{Color: BLACK Piece: team true}{Color: RED Piece: null}{Color: BLACK Piece: team true}{Color: RED Piece: null}{Color: BLACK Piece: team true}{Color: RED Piece: null}\n"
-				+ "{Color: RED Piece: null}{Color: BLACK Piece: team true}{Color: RED Piece: null}{Color: BLACK Piece: team true}{Color: RED Piece: null}{Color: BLACK Piece: team true}{Color: RED Piece: null}{Color: BLACK Piece: team true}\n"
-				+ "{Color: BLACK Piece: null}{Color: RED Piece: null}{Color: BLACK Piece: null}{Color: RED Piece: null}{Color: BLACK Piece: null}{Color: RED Piece: null}{Color: BLACK Piece: null}{Color: RED Piece: null}\n"
-				+ "{Color: RED Piece: null}{Color: BLACK Piece: null}{Color: RED Piece: null}{Color: BLACK Piece: null}{Color: RED Piece: null}{Color: BLACK Piece: null}{Color: RED Piece: null}{Color: BLACK Piece: null}\n"
-				+ "{Color: BLACK Piece: team false}{Color: RED Piece: null}{Color: BLACK Piece: team false}{Color: RED Piece: null}{Color: BLACK Piece: team false}{Color: RED Piece: null}{Color: BLACK Piece: team false}{Color: RED Piece: null}\n"
-				+ "{Color: RED Piece: null}{Color: BLACK Piece: team false}{Color: RED Piece: null}{Color: BLACK Piece: team false}{Color: RED Piece: null}{Color: BLACK Piece: team false}{Color: RED Piece: null}{Color: BLACK Piece: team false}\n"
-				+ "{Color: BLACK Piece: team false}{Color: RED Piece: null}{Color: BLACK Piece: team false}{Color: RED Piece: null}{Color: BLACK Piece: team false}{Color: RED Piece: null}{Color: BLACK Piece: team false}{Color: RED Piece: null}\n"
+				+ "{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}\n"
+				+ "{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}\n"
+				+ "{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}{Color: R Piece: null}{Color: B Piece: team true}\n"
+				+ "{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}\n"
+				+ "{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}\n"
+				+ "{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}\n"
+				+ "{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}\n"
+				+ "{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}{Color: B Piece: team false}{Color: R Piece: null}\n"
 				+ "]");
 	}
 	
