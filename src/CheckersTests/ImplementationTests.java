@@ -11,7 +11,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({MainTest.class
-			, GameBoardTest.class/* list classes here */ })
+			, GameBoardTest.class
+			, CheckersModelTest.class/* list classes here */ })
 public final class ImplementationTests
 {
   //this class is a placeholder for the suite, so it has no members.

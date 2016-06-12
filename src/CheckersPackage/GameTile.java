@@ -43,6 +43,10 @@ public class GameTile {
 	 * @requires tileColor should be one of the tile color constants available
 	 */
 	public GameTile(String tileColor) {
+		if (tileColor == null) {
+			throw new IllegalArgumentException("Tile color should not be null");
+		}
+		
 		if (!tileColor.equals(TILE_RED) && !tileColor.equals(TILE_BLACK) && !tileColor.equals(TILE_WHITE)) {
 			throw new IllegalArgumentException("Tile color should be one of the available options");
 		}

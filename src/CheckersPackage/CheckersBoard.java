@@ -21,8 +21,12 @@ public class CheckersBoard implements GameBoard {
 	 * @param color1 one of two colors to use for the checkered pattern
 	 * @param color2 one of two colors to use for the checkered pattern
 	 * @requires tileColor should be one of the tile color constants available
+	 * 	and length > 0
 	 */
 	public CheckersBoard(int length, String color1, String color2) {
+		if (length <= 0) {
+			throw new IllegalArgumentException("Length of board less than 1");
+		}
 		this.tiles = new GameTile[length][length];
 		
 		this.fillBoard(color1, color2);
@@ -57,9 +61,13 @@ public class CheckersBoard implements GameBoard {
 	 * @param x component of location to check
 	 * @param y component of location to check
 	 * @return GamePiece at the specified location, null if no piece is there
-	 * @requires X and Y should both be <= length
+	 * @requires 0 >= X < length and 0 >= Y < length
 	 */
 	public GamePiece getPieceAtLocation(int x, int y) {
+		if (x < 0 || x >= this.getLength() || y < 0 || y >= this.getLength()) {
+			throw new IllegalArgumentException("Coordinate out of bounds");
+		}
+		
 		return this.tiles[x][y].getOccupyingPiece();
 	}
 	
@@ -68,9 +76,13 @@ public class CheckersBoard implements GameBoard {
 	 * @param x component of location to check
 	 * @param y component of location to check
 	 * @return String color at the specified location
-	 * @requires X and Y should both be <= length
+	 * @requires 0 >= X < length and 0 >= Y < length
 	 */
 	public String getColorAtLocation(int x, int y) {
+		if (x < 0 || x >= this.getLength() || y < 0 || y >= this.getLength()) {
+			throw new IllegalArgumentException("Coordinate out of bounds");
+		}
+		
 		return this.tiles[x][y].getTileColor();
 	}
 	
@@ -79,9 +91,13 @@ public class CheckersBoard implements GameBoard {
 	 * @param x component of the location to place the piece
 	 * @param y component of the location to place the piece
 	 * @param newPiece piece to place at the given location
-	 * @requires X and Y should both be <= length
+	 * @requires 0 >= X < length and 0 >= Y < length
 	 */
 	public void putPieceAtLocation(int x, int y, GamePiece newPiece) {
+		if (x < 0 || x >= this.getLength() || y < 0 || y >= this.getLength()) {
+			throw new IllegalArgumentException("Coordinate out of bounds");
+		}
+		
 		this.tiles[x][y].putOccupyingPiece(newPiece);
 	}
 	

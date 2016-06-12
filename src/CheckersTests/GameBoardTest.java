@@ -10,11 +10,13 @@ import CheckersPackage.GameBoard;
 public class GameBoardTest {
 	@Test
 	public void constructSmallBoardTest() {
+		@SuppressWarnings("unused")
 		GameBoard newBoard = new CheckersBoard(4, "RED", "BLACK");
 	}
 	
 	@Test
 	public void constructLargeBoardTest() {
+		@SuppressWarnings("unused")
 		GameBoard newBoard = new CheckersBoard(16, "RED", "BLACK");
 	}
 	
