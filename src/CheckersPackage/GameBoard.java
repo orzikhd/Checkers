@@ -4,29 +4,7 @@ package CheckersPackage;
  * Represents a square game board, with a set
  * amount of length * length tiles.
  */
-public class GameBoard {
-	
-	/*
-	 * Rep Invariant:
-	 * for all i, j tiles[i][j] != null
-	 * and tiles[i][j] rep invariant holds true
-	 */
-	
-	private GameTile[][] tiles;
-	
-	/**
-	 * Constructs a GameBoard of the given dimension
-	 * @param length the side length of the square GameBoard
-	 */
-	public GameBoard(int length) {
-		this.tiles = new GameTile[length][length];
-		
-		for (int i = 0; i < length; i++) {
-			for (int j = 0; j < length; j++) {
-				this.tiles[i][j] = new GameTile();
-			}
-		}
-	}
+public interface GameBoard {
 	
 	/**
 	 * Returns the piece at the given location
@@ -35,9 +13,7 @@ public class GameBoard {
 	 * @return GamePiece at the specified location, null if no piece is there
 	 * @requires X and Y should both be <= length
 	 */
-	public GamePiece getPieceAtLocation(int x, int y) {
-		return this.tiles[x][y].getOccupyingPiece();
-	}
+	public GamePiece getPieceAtLocation(int x, int y);
 	
 	/**
 	 * Returns the color at the given location
@@ -46,9 +22,7 @@ public class GameBoard {
 	 * @return String color at the specified location
 	 * @requires X and Y should both be <= length
 	 */
-	public String getColorAtLocation(int x, int y) {
-		return this.tiles[x][y].getTileColor();
-	}
+	public String getColorAtLocation(int x, int y);
 	
 	/**
 	 * Places a piece at the given location
@@ -57,31 +31,13 @@ public class GameBoard {
 	 * @param newPiece piece to place at the given location
 	 * @requires X and Y should both be <= length
 	 */
-	public void putPieceAtLocation(int x, int y, GamePiece newPiece) {
-		this.tiles[x][y].putOccupyingPiece(newPiece);
-	}
+	public void putPieceAtLocation(int x, int y, GamePiece newPiece);
 	
 	/**
 	 * Returns the length of one side of the square board
 	 * @return int length of the side of the board
 	 */
-	public int getLength() {
-		return this.tiles.length;
-	}
-	
-	@Override
-	public String toString() {
-		String result = "[\n";
-		
-		for (int i = 0; i < this.getLength(); i++) {
-			for (int j = 0; j < this.getLength(); j++) {
-				result += "{Color: " + this.tiles[i][j].getTileColor() + " Piece: " + this.tiles[i][j].getOccupyingPiece() + "}";
-			}
-			result += "\n";
-		}
-		
-		return result + "]";
-	}
+	public int getLength();
 }
 
 
