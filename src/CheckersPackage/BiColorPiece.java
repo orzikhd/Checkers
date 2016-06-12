@@ -24,4 +24,9 @@ public class BiColorPiece extends GamePiece {
 	public boolean getColor() {
 		return this.color;
 	}
+	
+	@Override
+	public String toString() {
+		return "team " + this.color;
+	}
 }

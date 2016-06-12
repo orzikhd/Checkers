@@ -29,7 +29,6 @@ public class GameBoardTest {
 	@Test
 	public void printSmallBoardTest() {
 		GameBoard newBoard = new CheckersBoard(2, "RED", "BLACK");
-		System.out.println(newBoard);
 		assertEquals(newBoard.toString(), "[\n"
 				+ "{Color: RED Piece: null}{Color: BLACK Piece: null}\n"
 				+ "{Color: BLACK Piece: null}{Color: RED Piece: null}\n"

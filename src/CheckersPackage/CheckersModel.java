@@ -22,18 +22,6 @@ public class CheckersModel {
 		
 		this.p1Pieces = new HashSet<BiColorPiece>();
 		this.p2Pieces = new HashSet<BiColorPiece>();
-		
-		BiColorPiece curr;
-		for (int i = 0; i < LENGTH_CHECKERS_BOARD; i++) {
-			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
-				curr = (BiColorPiece) board.getPieceAtLocation(i, j);
-				if (curr.getColor()) {
-					p1Pieces.add(curr);
-				} else {
-					p2Pieces.add(curr);
-				}
-			}
-		}
 	}
 	
 	/**
@@ -59,6 +47,7 @@ public class CheckersModel {
 	
 	/**
 	 * Empty the board of all game pieces
+	 * @modifies this CheckersModel
 	 */
 	public void emptyBoard() {
 		for (int i = 0; i < LENGTH_CHECKERS_BOARD; i++) {
@@ -73,17 +62,55 @@ public class CheckersModel {
 	
 	/**
 	 * Set up game pieces for a game of Checkers
+	 * @modifies this CheckersModel
 	 */
 	public void setUpBoard() {
 		
+		BiColorPiece curr;
+		
+		//place player1 pieces on top
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
+				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
+					curr = new BiColorPiece(true);
+					p1Pieces.add(curr);
+					this.board.putPieceAtLocation(i, j, curr);
+				}
+			}
+		}	
+		
+		//place player2 pieces at the bottom
+		for (int i = 5; i < LENGTH_CHECKERS_BOARD; i++) {
+			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
+				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
+					curr = new BiColorPiece(false);
+					p2Pieces.add(curr);
+					this.board.putPieceAtLocation(i, j, curr);
+				}
+			}
+		}
+		
+		//Acknowledgment that I am violating DRY
 	}
 	
 	/**
 	 * Moves a piece from a starting location to a new location
 	 * @param moveFrom Location from which to move a piece
 	 * @param moveTo Location to which to move the piece
+	 * @modifies this CheckersModel
+	 * @effects moves Piece from moveFrom to moveTo
 	 */
 	public void movePiece(Location moveFrom, Location moveTo) {
+		
+	}
+	
+	/**
+	 * Remove a piece from the given Location
+	 * @param removeFrom Location from which to remove a piece on the board
+	 * @modifies this CheckersModel
+	 * @effects if a piece was present at this location, it has been removed
+	 */
+	public void removePiece(Location removeFrom) {
 		
 	}
 	
@@ -95,6 +122,10 @@ public class CheckersModel {
 		return null;
 	}
 	
+	@Override
+	public String toString() {
+		return this.board.toString();
+	}
 }
 
 
