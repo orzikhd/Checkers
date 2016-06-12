@@ -3,6 +3,7 @@ package CheckersPackage;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
@@ -37,7 +38,7 @@ public class CheckersMain {
 			}
 			
 			if (currLoc.getPieceTeamColor() != Location.NULL_TEAM_COLOR) {
-				TextField pieceName = new TextField();
+				JLabel pieceName = new JLabel();
 				pieceName.setText("Team: " + currLoc.getPieceTeamColor());
 				currLocPanel.add(pieceName);
 			}

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import CheckersPackage.CheckersModel;
+import CheckersPackage.Location;
 
 public class CheckersModelTest {
 	
@@ -69,6 +70,12 @@ public class CheckersModelTest {
 	
 	@Test
 	public void removePieceTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		assertTrue(newModel.getBoardState().get(1).getPieceTeamColor() != Location.NULL_TEAM_COLOR);
+		Location removeTestLoc = new Location(0, 1, 0, false, null);
+		newModel.removePiece(removeTestLoc);
+		assertEquals(newModel.getBoardState().get(1).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
 		
 	}
 	

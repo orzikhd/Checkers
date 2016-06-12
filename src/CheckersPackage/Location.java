@@ -20,17 +20,17 @@ public class Location {
 	private int X;
 	private int Y;
 	private int pieceTeamColor;
+	private boolean isKing;
 	private String tileColor;
 	
 	/**
 	 * Creates a Location given a coordinate pair and color boolean
 	 * @param X component of location
 	 * @param Y component of location
-	 * @param colorFlag boolean value to represent one color or another
-	 * 	as a true/false value
+	 * @param pieceTeamColor int corresponding to a team color
 	 * @requires X >= 0 and Y >= 0
 	 */
-	public Location(int X, int Y, int pieceTeamColor, String tileColor) {
+	public Location(int X, int Y, int pieceTeamColor, boolean isKing, String tileColor) {
 		if (X < 0 || Y < 0) {
 			throw new IllegalArgumentException("Location component should be 0 or positive");
 		}
@@ -38,6 +38,7 @@ public class Location {
 		this.X = X;
 		this.Y = Y;
 		this.pieceTeamColor = pieceTeamColor;
+		this.isKing = isKing;
 		this.tileColor = tileColor;
 	}
 	
@@ -51,6 +52,10 @@ public class Location {
 	
 	public int getPieceTeamColor() {
 		return this.pieceTeamColor;
+	}
+	
+	public boolean getIsKing() {
+		return this.isKing;
 	}
 	
 	public String getTileColor() {
