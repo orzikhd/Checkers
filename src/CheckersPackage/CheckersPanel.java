@@ -11,7 +11,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * CheckersPanel handles all logic relevant to maintaining the Checkers Game, including its board and menu
+ */
 public class CheckersPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8107067215852039233L;
 	private JPanel boardWrapper;
 	private MenuPanel menu;
 	private CheckersModel masterModel;
@@ -21,8 +28,9 @@ public class CheckersPanel extends JPanel {
 		super();
 
 		this.boardWrapper = new JPanel();
-		this.menu = new MenuPanel();
 		this.masterModel = new CheckersModel();
+		this.menu = new MenuPanel(masterModel, this);
+
 		masterModel.setUpBoard();
 		
 		//this.remove(this.boardWrapper);
@@ -47,6 +55,7 @@ public class CheckersPanel extends JPanel {
 		}
 	}
 	
+	//draws all locations from the masterModel
 	private void drawState() {
 		
 		List<Location> currState = this.masterModel.getBoardState();
@@ -83,5 +92,13 @@ public class CheckersPanel extends JPanel {
 			boardWrapper.add(currLocPanel);
 		}
 		boardWrapper.validate();
+	}
+	
+	/**
+	 * Requests the CheckersPanel to update the board
+	 */
+	public void requestUpdate() {
+		this.needsRedraw = true;
+		this.repaint();
 	}
 }

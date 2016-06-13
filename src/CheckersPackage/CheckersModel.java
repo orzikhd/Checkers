@@ -83,6 +83,7 @@ public class CheckersModel {
 	
 	/**
 	 * Set up game pieces for a game of Checkers
+	 * If the board isn't empty, empty it first for expected results.
 	 * @modifies this CheckersModel
 	 */
 	public void setUpBoard() {
