@@ -68,7 +68,8 @@ public class CheckersBoard implements GameBoard {
 			throw new IllegalArgumentException("Coordinate out of bounds");
 		}
 		
-		return this.tiles[x][y].getOccupyingPiece();
+		//since arrays are accessed by row and then col, it should be y first and then x
+		return this.tiles[y][x].getOccupyingPiece();
 	}
 	
 	/**
@@ -83,7 +84,8 @@ public class CheckersBoard implements GameBoard {
 			throw new IllegalArgumentException("Coordinate out of bounds");
 		}
 		
-		return this.tiles[x][y].getTileColor();
+		//since arrays are accessed by row and then col, it should be y first and then x
+		return this.tiles[y][x].getTileColor();
 	}
 	
 	/**
@@ -98,7 +100,8 @@ public class CheckersBoard implements GameBoard {
 			throw new IllegalArgumentException("Coordinate out of bounds");
 		}
 		
-		this.tiles[x][y].putOccupyingPiece(newPiece);
+		//since arrays are accessed by row and then col, it should be y first and then x
+		this.tiles[y][x].putOccupyingPiece(newPiece);
 	}
 	
 	/**

@@ -73,7 +73,7 @@ public class CheckersModel {
 	public void emptyBoard() {
 		for (int i = 0; i < LENGTH_CHECKERS_BOARD; i++) {
 			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
-				this.board.putPieceAtLocation(i, j, null);
+				this.board.putPieceAtLocation(j, i, null);
 			}
 		}
 		
@@ -95,7 +95,7 @@ public class CheckersModel {
 				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
 					curr = new CheckerPiece(BiColorPiece.TEAM1);
 					p1Pieces.add(curr);
-					this.board.putPieceAtLocation(i, j, curr);
+					this.board.putPieceAtLocation(j, i, curr);
 				}
 			}
 		}	
@@ -106,7 +106,7 @@ public class CheckersModel {
 				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
 					curr = new CheckerPiece(BiColorPiece.TEAM2);
 					p2Pieces.add(curr);
-					this.board.putPieceAtLocation(i, j, curr);
+					this.board.putPieceAtLocation(j, i, curr);
 				}
 			}
 		}
@@ -115,11 +115,11 @@ public class CheckersModel {
 	}
 	
 	/**
-	 * Moves a piece from a starting location to a new location
+	 * Moves a piece from a starting location to a new location with one jump
 	 * @param moveFrom Location from which to move a piece
 	 * @param moveTo Location to which to move the piece
 	 * @modifies this CheckersModel
-	 * @effects moves Piece from moveFrom to moveTo
+	 * @effects moves Piece from moveFrom to moveTo if move is valid
 	 */
 	public void movePiece(Location moveFrom, Location moveTo) {
 		if (checkValidMove(moveFrom, moveTo)) {
@@ -135,15 +135,10 @@ public class CheckersModel {
 	 * @return true if valid move by any means, false otherwise
 	 */
 	public boolean checkValidMove(Location moveFrom, Location moveTo) {
-		return checkValidMove(moveFrom, moveTo, false);
-	}
-	
-	//checks if the rules of checkers allow this move
-	private boolean checkValidMove(Location moveFrom, Location moveTo, boolean isKing) {
 		
 		//if a piece is at the spot you want to move to, there is no way you can go there
 		//also, if there is no piece at the moveFrom location, no valid move can be made; so also false
-		if (moveTo.getPieceTeamColor() != Location.NULL_TEAM_COLOR || moveFrom.getPieceTeamColor() != Location.NULL_TEAM_COLOR) {
+		if (moveTo.getPieceTeamColor() != Location.NULL_TEAM_COLOR && moveFrom.getPieceTeamColor() != Location.NULL_TEAM_COLOR) {
 			return false;
 		}
 		
@@ -152,57 +147,86 @@ public class CheckersModel {
 		int toX = moveTo.getX();
 		int toY = moveTo.getY();
 		
+		CheckerPiece downLeft;
+		CheckerPiece downRight;
+		CheckerPiece upLeft;
+		CheckerPiece upRight;
+		
 		//check what pieces (if any) exist around this piece
-		CheckerPiece downLeft = (CheckerPiece) this.board.getPieceAtLocation(frX - 1, frY + 1);
-		CheckerPiece downRight = (CheckerPiece) this.board.getPieceAtLocation(frX + 1, frY + 1);
-		CheckerPiece upLeft = (CheckerPiece) this.board.getPieceAtLocation(frX - 1, frY - 1);
-		CheckerPiece upRight = (CheckerPiece) this.board.getPieceAtLocation(frX + 1, frY - 1);
+		if (frX - 1 < 0 || frY + 1 > CheckersModel.LENGTH_CHECKERS_BOARD - 1) {
+			downLeft = null;
+		} else {
+			downLeft = (CheckerPiece) this.board.getPieceAtLocation(frX - 1, frY + 1);
+		}
+		
+		if (frX + 1 > CheckersModel.LENGTH_CHECKERS_BOARD - 1 || frY + 1 > CheckersModel.LENGTH_CHECKERS_BOARD - 1) {
+			downRight = null;
+		} else {
+			downRight = (CheckerPiece) this.board.getPieceAtLocation(frX + 1, frY + 1);
+		}
+		
+		if (frX - 1 < 0 || frY - 1 < 0) {
+			upLeft = null;
+		} else {
+			upLeft = (CheckerPiece) this.board.getPieceAtLocation(frX - 1, frY - 1);
+		}
+		
+		if (frX + 1 > CheckersModel.LENGTH_CHECKERS_BOARD - 1 || frY - 1 < 0) {
+			upRight = null;
+		} else {
+			upRight = (CheckerPiece) this.board.getPieceAtLocation(frX + 1, frY - 1);
+		}
+		
+		//now finally check if the move/jump is valid
 		
 		if (moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
 			//jumping an enemy is available and must be done
-			if (downLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY + 2) {
+			if (downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY + 2) {
 				return true;
-			} else if (downRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY + 2) {
+			} else if (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY + 2) {
 				return true;
 			} else if (toX == frX - 1 && toY == frY + 1
 					|| toX == frX + 1 && toY == frY + 1){
 				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
 				return true;
-			} else {
-				return false;
-			}
-			/*
-			if (toX == frX - 1 && toY == frY + 1
-					|| toX == frX + 1 && toY == frY + 1
-					|| (toX == frX - 2 && toY == frY + 2 && downLeft.getTeamColor() == BiColorPiece.TEAM2)
-					|| (toX == frX + 2 && toY == frY + 2 && downRight.getTeamColor() == BiColorPiece.TEAM2)) {
-				//this is a standard player1 move
-				return true;
-			} else { //check player1 combos
-				
-				Location moveFromComboDL = new Location(frX - 2, frY + 2, moveFrom.getPieceTeamColor(), "W");
-				Location moveFromComboDR = new Location(frX + 2, frY + 2, moveFrom.getPieceTeamColor(), "W");
-				return ((downLeft.getTeamColor() == BiColorPiece.TEAM2 && checkValidMove(moveFromComboDL, moveTo, true))
-						|| (downRight.getTeamColor() == BiColorPiece.TEAM2 && checkValidMove(moveFromComboDR, moveTo, true)));
-			}
-			*/
-		} else { //team2
-			/*if (toX == frX - 1 && toY == frY - 1
-					|| toX == frX + 1 && toY == frY - 1
-					|| (toX == frX - 2 && toY == frY - 2 && upLeft.getTeamColor() == BiColorPiece.TEAM2)
-					|| (toX == frX + 2 && toY == frY - 2 && upRight.getTeamColor() == BiColorPiece.TEAM2)) {
-				//this is a standard player2 move
-				return true;
-			} else { //check player2 combos
-				
-				Location moveFromComboUL = new Location(frX - 2, frY - 2, moveFrom.getPieceTeamColor(), "W");
-				Location moveFromComboUR = new Location(frX + 2, frY - 2, moveFrom.getPieceTeamColor(), "W");
-				return ((upLeft.getTeamColor() == BiColorPiece.TEAM1 && checkValidMove(moveFromComboUL, moveTo, true))
-						|| (upRight.getTeamColor() == BiColorPiece.TEAM1 && checkValidMove(moveFromComboUR, moveTo, true)));
-			}
-			*/
+			} else if (moveFrom.getIsKing()) {
+				//kings can move backwards
+				if (upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY - 2) {
+					return true;
+				} else if (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY - 2) {
+					return true;
+				} else if (toX == frX - 1 && toY == frY - 1
+						|| toX == frX + 1 && toY == frY - 1){
+					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+					return true;
+				} 
+			}		
 		}
-
+		
+		if (moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
+			//jumping an enemy is available and must be done
+			if (upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 && toX == frX - 2 && toY == frY - 2) {
+				return true;
+			} else if (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1 && toX == frX + 2 && toY == frY - 2) {
+				return true;
+			} else if (toX == frX - 1 && toY == frY - 1
+					|| toX == frX + 1 && toY == frY - 1){
+				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+				return true;
+			} else if (moveFrom.getIsKing()) {
+				//kings can move backwards
+				if (downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM1 && toX == frX - 2 && toY == frY + 2) {
+					return true;
+				} else if (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM1 && toX == frX + 2 && toY == frY + 2) {
+					return true;
+				} else if (toX == frX - 1 && toY == frY + 1
+						|| toX == frX + 1 && toY == frY + 1){
+					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+					return true;
+				} 
+			}
+		}
+		
 		return false;
 	}
 	
