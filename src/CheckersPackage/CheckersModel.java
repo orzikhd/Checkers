@@ -53,11 +53,11 @@ public class CheckersModel {
 		CheckerPiece currPiece;
 		for (int i = 0; i < LENGTH_CHECKERS_BOARD; i++) {
 			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
-				currPiece = (CheckerPiece) this.board.getPieceAtLocation(i, j);
+				currPiece = (CheckerPiece) this.board.getPieceAtLocation(j, i);
 				if (currPiece == null) {
-					curr = new Location(i, j, Location.NULL_TEAM_COLOR, false, this.board.getColorAtLocation(i, j));
+					curr = new Location(j, i, Location.NULL_TEAM_COLOR, false, this.board.getColorAtLocation(j, i));
 				} else {
-					curr = new Location(i, j, currPiece.getTeamColor(), currPiece.isKing(), this.board.getColorAtLocation(i, j));
+					curr = new Location(j, i, currPiece.getTeamColor(), currPiece.isKing(), this.board.getColorAtLocation(j, i));
 				}
 				locations.add(curr);
 			}

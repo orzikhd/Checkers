@@ -15,7 +15,6 @@ public class CheckersMain {
 		masterModel.setUpBoard();
 		List<Location> currState = masterModel.getBoardState();
 		
-		
 		Dimension screenSize = new Dimension(1024, 1024);
 		
 		JFrame frame = new JFrame("Checkers!");

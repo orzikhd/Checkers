@@ -86,15 +86,14 @@ public class CheckersModelTest {
 	public void movePieceTest() {
 		CheckersModel newModel = new CheckersModel();
 		newModel.setUpBoard();
-		assertEquals(newModel.getBoardState().get(51).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
+		assertEquals(newModel.getBoardState().get(30).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
 		Location LeftEdgePiece = new Location(7, 2, BiColorPiece.TEAM1, false, "B");
 		Location moveDownLeft = new Location(6, 3, Location.NULL_TEAM_COLOR, false, "B");
 		newModel.movePiece(LeftEdgePiece, moveDownLeft);
 		List<Location> postMove = newModel.getBoardState();
-		postMove.get(30).getPieceTeamColor();
 		
-		//over 6 columns and down 3 rows so 6*8 + 3 = 51
-		assertEquals(postMove.get(51).getPieceTeamColor(), BiColorPiece.TEAM1);
+		//over 6 columns and down 3 rows so 3*8 + 6 = 30
+		assertEquals(postMove.get(30).getPieceTeamColor(), BiColorPiece.TEAM1);
 	}
 	
 	@Test
@@ -109,16 +108,15 @@ public class CheckersModelTest {
 		newModel.movePiece(moveUpRightPostMove, moveUpRight2);
 		
 		List<Location> preJump = newModel.getBoardState();
-		//team 1 piece at 3, 2 so 3*8 + 2 = 26
-		//team 2 piece at 4, 3 so 4*8 + 3 = 35
-		//team 1 piece new location would be 5, 4 so 5*8 + 4 = 44
-		newModel.movePiece(preJump.get(26), preJump.get(44));
+		//team 1 piece at 3, 2 so 2*8 + 3 = 19
+		//team 2 piece at 4, 3 so 3*8 + 4 = 28
+		//team 1 piece new location would be 5, 4 so 4*8 + 5 = 37
+		newModel.movePiece(preJump.get(19), preJump.get(37));
 		
 		List<Location> postJump = newModel.getBoardState();
-		
-		assertEquals(postJump.get(26).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
-		assertEquals(postJump.get(35).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
-		assertEquals(postJump.get(44).getPieceTeamColor(), BiColorPiece.TEAM1);
+		assertEquals(postJump.get(19).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
+		assertEquals(postJump.get(28).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
+		assertEquals(postJump.get(37).getPieceTeamColor(), BiColorPiece.TEAM1);
 	}
 	
 	@Test
@@ -128,8 +126,7 @@ public class CheckersModelTest {
 		assertTrue(newModel.getBoardState().get(1).getPieceTeamColor() != Location.NULL_TEAM_COLOR);
 		Location removeTestLoc = new Location(1, 0, 0, false, null);
 		newModel.removePiece(removeTestLoc);
-		//list goes down columns and then over one in the row, so get(8) is location (1, 0)
-		assertEquals(newModel.getBoardState().get(8).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
+		assertEquals(newModel.getBoardState().get(1).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
 		
 	}
 	
