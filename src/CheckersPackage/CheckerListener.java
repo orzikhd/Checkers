@@ -14,24 +14,27 @@ import javax.swing.border.LineBorder;
  */
 public class CheckerListener implements MouseListener{
 	
-	private Location checker;
-	private JPanel checkerPanel;
+	private int boardIndex;
+	private CheckersPanel masterPanel;
 	
-	public CheckerListener(Location checker, JPanel checkerPanel) {
-		this.checker = checker;
-		this.checkerPanel = checkerPanel;
+	public CheckerListener(CheckersPanel masterPanel, int boardIndex) {
+		this.boardIndex = boardIndex;
+		this.masterPanel = masterPanel;
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println(this.checker.getPieceTeamColor());
-		LineBorder checkerBorder = (LineBorder) this.checkerPanel.getBorder();
-		if (checkerBorder.getLineColor().equals(Color.PINK)) {
-				this.checkerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
-		} else {
-			this.checkerPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, 4));
-		}
 		
+		Location checker = masterPanel.getLocationAtIndex(this.boardIndex);
+		JPanel checkerPanel = masterPanel.getTileAtIndex(this.boardIndex);
+		
+		System.out.println(checker.getPieceTeamColor());
+		LineBorder checkerBorder = (LineBorder) checkerPanel.getBorder();
+		if (checkerBorder.getLineColor().equals(Color.PINK)) {
+			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+		} else {
+			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, 4));
+		}
 	}
 
 	@Override

@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 /**
  * CheckersPanel handles all logic relevant to maintaining the Checkers Game, including its board and menu
@@ -20,6 +24,7 @@ public class CheckersPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 8107067215852039233L;
 	private JPanel boardWrapper;
+	private List<JPanel> tiles;
 	private MenuPanel menu;
 	private CheckersModel masterModel;
 	private boolean needsRedraw;
@@ -30,12 +35,20 @@ public class CheckersPanel extends JPanel {
 		this.boardWrapper = new JPanel();
 		this.masterModel = new CheckersModel();
 		this.menu = new MenuPanel(masterModel, this);
-
+		this.tiles = new ArrayList<JPanel>();
+		
 		masterModel.setUpBoard();
 		
-		//this.remove(this.boardWrapper);
-		//this.boardWrapper = new JPanel();
 		boardWrapper.setLayout(new GridLayout(8, 8));
+		for (int i = 0; i < 64; i++) {
+			JPanel currLocPanel = new JPanel();
+			CheckerListener currListener = new CheckerListener(this, i);
+			currLocPanel.addMouseListener(currListener);
+			tiles.add(currLocPanel);
+			boardWrapper.add(currLocPanel);
+		}
+		
+		boardWrapper.validate();
 		boardWrapper.setBackground(Color.GREEN);
 		menu.setBackground(Color.ORANGE);
 				
@@ -60,10 +73,11 @@ public class CheckersPanel extends JPanel {
 		
 		List<Location> currState = this.masterModel.getBoardState();
 		
-		boardWrapper.removeAll();
-		
+		//boardWrapper.removeAll();
+		int i = 0;
 		for (Location currLoc : currState) {
-			JPanel currLocPanel = new JPanel();
+			JPanel currLocPanel = this.tiles.get(i);
+			currLocPanel.removeAll();
 			if (currLoc.getTileColor().equals("R")) {
 				currLocPanel.setBackground(Color.RED);
 				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 4));
@@ -86,10 +100,9 @@ public class CheckersPanel extends JPanel {
 				
 				JLabel pieceName = new JLabel(icon);
 				currLocPanel.add(pieceName);
-				currLocPanel.addMouseListener(new CheckerListener(currLoc, currLocPanel));
 			}
-	
-			boardWrapper.add(currLocPanel);
+			
+			i++;
 		}
 		boardWrapper.validate();
 	}
@@ -100,5 +113,15 @@ public class CheckersPanel extends JPanel {
 	public void requestUpdate() {
 		this.needsRedraw = true;
 		this.repaint();
+	}
+	
+	//package-private
+	JPanel getTileAtIndex(int index) {
+		return this.tiles.get(index);
+	}
+	
+	//package-private
+	Location getLocationAtIndex(int index) {
+		return this.masterModel.getBoardState().get(index);
 	}
 }
