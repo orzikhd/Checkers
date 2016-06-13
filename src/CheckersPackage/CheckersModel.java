@@ -125,6 +125,23 @@ public class CheckersModel {
 		if (checkValidMove(moveFrom, moveTo)) {
 			this.removePiece(moveFrom);
 			this.board.putPieceAtLocation(moveTo.getX(), moveTo.getY(), new CheckerPiece(moveFrom.getPieceTeamColor()));
+			
+			int frX = moveFrom.getX();
+			int frY = moveFrom.getY();
+			int toX = moveTo.getX();
+			int toY = moveTo.getY();
+			
+			//remove piece if a jump occurred
+			if (toX == frX - 2 && toY == frY + 2) {
+				this.removePiece(new Location(frX - 1, frY + 1, Location.NULL_TEAM_COLOR, false, "W"));
+			} else if (toX == frX + 2 && toY == frY + 2) {
+				this.removePiece(new Location(frX + 1, frY + 1, Location.NULL_TEAM_COLOR, false, "W"));
+			} else if (toX == frX - 2 && toY == frY - 2) {
+				this.removePiece(new Location(frX - 1, frY - 1, Location.NULL_TEAM_COLOR, false, "W"));
+			} else if (toX == frX + 2 && toY == frY - 2) {
+				this.removePiece(new Location(frX + 1, frY - 1, Location.NULL_TEAM_COLOR, false, "W"));
+			}
+			
 		}
 	}
 	
@@ -180,7 +197,14 @@ public class CheckersModel {
 		//now finally check if the move/jump is valid
 		
 		if (moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
+			
 			//jumping an enemy is available and must be done
+			if ((downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 || downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2)
+					&& (toX == frX - 1 && toY == frY + 1 || toX == frX + 1 && toY == frY + 1)) {
+				return false;
+			}
+			
+			//if a piece exists then jump it, otherwise just walk
 			if (downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY + 2) {
 				return true;
 			} else if (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY + 2) {
@@ -204,7 +228,14 @@ public class CheckersModel {
 		}
 		
 		if (moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
+			
 			//jumping an enemy is available and must be done
+			if ((upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 || upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1)
+					&& (toX == frX - 1 && toY == frY - 1 || toX == frX + 1 && toY == frY - 1)) {
+				return false;
+			}
+			
+			//if a piece exists then jump it, otherwise just walk
 			if (upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 && toX == frX - 2 && toY == frY - 2) {
 				return true;
 			} else if (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1 && toX == frX + 2 && toY == frY - 2) {

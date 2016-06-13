@@ -99,7 +99,26 @@ public class CheckersModelTest {
 	
 	@Test
 	public void validateJumpOnceTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		Location startTeam2Spot = new Location(2, 5, BiColorPiece.TEAM2, false, "B");
+		Location moveUpRight = new Location(3, 4, Location.NULL_TEAM_COLOR, false, "B");
+		Location moveUpRightPostMove = new Location(3, 4, BiColorPiece.TEAM2, false, "B");
+		Location moveUpRight2 = new Location(4, 3, Location.NULL_TEAM_COLOR, false, "B");
+		newModel.movePiece(startTeam2Spot, moveUpRight);
+		newModel.movePiece(moveUpRightPostMove, moveUpRight2);
 		
+		List<Location> preJump = newModel.getBoardState();
+		//team 1 piece at 3, 2 so 3*8 + 2 = 26
+		//team 2 piece at 4, 3 so 4*8 + 3 = 35
+		//team 1 piece new location would be 5, 4 so 5*8 + 4 = 44
+		newModel.movePiece(preJump.get(26), preJump.get(44));
+		
+		List<Location> postJump = newModel.getBoardState();
+		
+		assertEquals(postJump.get(26).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
+		assertEquals(postJump.get(35).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
+		assertEquals(postJump.get(44).getPieceTeamColor(), BiColorPiece.TEAM1);
 	}
 	
 	@Test
