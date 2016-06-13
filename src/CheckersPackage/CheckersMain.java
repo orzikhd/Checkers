@@ -23,12 +23,6 @@ public class CheckersMain {
 		checkersWrapper.setBackground(Color.MAGENTA);
 		frame.add(checkersWrapper);
 		
-		//menu.setBackground(Color.BLUE);
-		//menu.setPreferredSize(new Dimension(200, 1024));
-
-		//boardWrapper.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		//boardWrapper.setBounds(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight() - 32);
-		
 		frame.pack();
 		frame.setVisible(true);
 	}

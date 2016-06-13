@@ -33,6 +33,7 @@ public class CheckersPanel extends JPanel {
 		super();
 
 		this.boardWrapper = new JPanel();
+		this.boardWrapper.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4, true));
 		this.masterModel = new CheckersModel();
 		this.menu = new MenuPanel(masterModel, this);
 		this.tiles = new ArrayList<JPanel>();
@@ -80,13 +81,13 @@ public class CheckersPanel extends JPanel {
 			currLocPanel.removeAll();
 			if (currLoc.getTileColor().equals("R")) {
 				currLocPanel.setBackground(Color.RED);
-				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 4));
+				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.RED, CheckerListener.BORDER_THICKNESS));
 			} else if (currLoc.getTileColor().equals("B")) {
 				currLocPanel.setBackground(Color.BLACK);
-				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, CheckerListener.BORDER_THICKNESS));
 			} else {
 				currLocPanel.setBackground(Color.YELLOW);
-				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 4));
+				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, CheckerListener.BORDER_THICKNESS));
 			}
 			
 			if (currLoc.getPieceTeamColor() != Location.NULL_TEAM_COLOR) {
@@ -115,13 +116,32 @@ public class CheckersPanel extends JPanel {
 		this.repaint();
 	}
 	
+	//return the tile of the index
 	//package-private
 	JPanel getTileAtIndex(int index) {
 		return this.tiles.get(index);
 	}
 	
+	//return the location data of the index
 	//package-private
 	Location getLocationAtIndex(int index) {
 		return this.masterModel.getBoardState().get(index);
 	}
+	
+	//return if this piece can be moved right now
+	//package-private
+	boolean validSelection(int index) {
+		Location selection = this.masterModel.getBoardState().get(index);
+		if (selection.getPieceTeamColor() == Location.NULL_TEAM_COLOR) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 }
+
+
+
+
+
+
