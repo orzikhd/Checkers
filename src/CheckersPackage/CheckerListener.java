@@ -35,7 +35,7 @@ public class CheckerListener implements MouseListener{
 		
 		int squareWidth = this.masterPanel.getBoardWidth() / 8;
 		
-		System.out.println(e.getX() / squareWidth + ", " +  e.getY() / squareWidth);
+		//System.out.println(e.getX() / squareWidth + ", " +  e.getY() / squareWidth);
 		
 		this.currentSquareX = e.getX() / squareWidth;
 		this.currentSquareY = e.getY() / squareWidth;

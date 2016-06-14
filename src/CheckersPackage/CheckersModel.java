@@ -95,6 +95,37 @@ public class CheckersModel {
 	}
 	
 	/**
+	 * Returns the current player in the game
+	 * @return int representing current player in the game
+	 */
+	public int getCurrentPlayer() {
+		return this.currentPlayer;
+	}
+	
+	/**
+	 * Remove a piece from the given Location
+	 * @param removeFrom Location from which to remove a piece on the board
+	 * @modifies this CheckersModel
+	 * @effects if a piece was present at this location, it has been removed
+	 */
+	public void removePiece(Location removeFrom) {
+		this.board.putPieceAtLocation(removeFrom.getX(), removeFrom.getY(), null);
+	}
+	
+	/**
+	 * Returns if player1 or player2 has won, if they have.
+	 * @return A string representing player1, player2, or that no one has won yet.
+	 */
+	public String declareVictor() {
+		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return this.board.toString();
+	}
+	
+	/**
 	 * Set up game pieces for a game of Checkers.
 	 * Board needs to be set up before a player can make a move.
 	 * If the board isn't empty, empty it first for expected results.
@@ -189,13 +220,167 @@ public class CheckersModel {
 		int frY = moveFrom.getY();
 		int toX = moveTo.getX();
 		int toY = moveTo.getY();
+		int left = frX - 1;
+		int right = frX + 1;
+		int up = frY - 1;
+		int down = frY + 1;
+		
+		List<CheckerPiece> surroundingPieces = this.getSurroundingPieces(moveFrom);
+		
+		CheckerPiece downLeft = surroundingPieces.get(0);
+		CheckerPiece downRight = surroundingPieces.get(1);
+		CheckerPiece upLeft = surroundingPieces.get(2);
+		CheckerPiece upRight = surroundingPieces.get(3);
+		
+		//now finally check if the move/jump is valid
+		if (this.currentPlayer == BiColorPiece.TEAM1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
+			
+			//jumping an enemy is available and must be done
+			if ((downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 || downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2)
+					&& (toX == left && toY == down || toX == right && toY == down)) {
+				return false;
+			}
+			
+			//if a piece exists then jump it
+			if (downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY + 2) {
+				return true;
+			} else if (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY + 2) {
+				return true;
+			} else if (toX == left && toY == down
+					|| toX == right && toY == down){
+				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+				//we also now know that no jump is available
+				return true;
+			} else if (moveFrom.getIsKing()) {
+				//kings can move backwards
+				if (upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY - 2) {
+					return true;
+				} else if (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY - 2) {
+					return true;
+				} else if (toX == left && toY == up
+						|| toX == right && toY == up){
+					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+					return true;
+				} 
+			}		
+		}
+		
+		if (this.currentPlayer == BiColorPiece.TEAM2 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
+			
+			//jumping an enemy is available and must be done
+			if ((upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 || upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1)
+					&& (toX == left && toY == up || toX == right && toY == up)) {
+				return false;
+			}
+			
+			//if a piece exists then jump it, otherwise just walk
+			if (upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 && toX == frX - 2 && toY == frY - 2) {
+				return true;
+			} else if (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1 && toX == frX + 2 && toY == frY - 2) {
+				return true;
+			} else if (toX == left && toY == up
+					|| toX == right && toY == up){
+				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+				return true;
+			} else if (moveFrom.getIsKing()) {
+				//kings can move backwards
+				if (downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM1 && toX == frX - 2 && toY == frY + 2) {
+					return true;
+				} else if (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM1 && toX == frX + 2 && toY == frY + 2) {
+					return true;
+				} else if (toX == left && toY == down
+						|| toX == right && toY == down){
+					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+					return true;
+				} 
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns if this is a valid piece to select for movement.
+	 * For movement to be valid, a piece must be in this location.
+	 * A piece is valid for movement if the current player owns the
+	 * selected piece and there is a valid move available.
+	 * @param selection
+	 * @return
+	 */
+	public boolean checkValidSelection(Location selection) {
+		
+		List<Location> surroundingLocations = new ArrayList<>();
+		List<CheckerPiece> surroundingPieces = this.getSurroundingPieces(selection);
+		int frX = selection.getX();
+		int frY = selection.getY();
+		int left = frX - 1;
+		int right = frX + 1;
+		int up = frY - 1;
+		int down = frY + 1;
+		
+		//valid to move left
+		if (left > 0) {
+			//valid to move up
+			if (up > 0) {
+				if (surroundingPieces.get(2) != null) {
+					surroundingLocations.add(new Location(left, up, surroundingPieces.get(2).getTeamColor(), surroundingPieces.get(2).isKing(), GameTile.TILE_WHITE));
+				} else {
+					surroundingLocations.add(new Location(left, up, Location.NULL_TEAM_COLOR, false, GameTile.TILE_WHITE));
+				}
+				
+			}
+			//valid to move down
+			if (down < this.LENGTH_CHECKERS_BOARD) {
+				if (surroundingPieces.get(0) != null) {
+					surroundingLocations.add(new Location(left, down, surroundingPieces.get(0).getTeamColor(), surroundingPieces.get(0).isKing(), GameTile.TILE_WHITE));
+				} else {
+					surroundingLocations.add(new Location(left, down, Location.NULL_TEAM_COLOR, false, GameTile.TILE_WHITE));
+				}
+			}
+		}
+		
+		//valid to move right
+		if (right < this.LENGTH_CHECKERS_BOARD) {
+			//valid to move up
+			if (up > 0) {
+				if (surroundingPieces.get(3) != null) {
+					surroundingLocations.add(new Location(right, up, surroundingPieces.get(3).getTeamColor(), surroundingPieces.get(3).isKing(), GameTile.TILE_WHITE));
+				} else {
+					surroundingLocations.add(new Location(right, up, Location.NULL_TEAM_COLOR, false, GameTile.TILE_WHITE));
+				}
+			}
+			//valid to move down
+			if (down < this.LENGTH_CHECKERS_BOARD) {
+				if (surroundingPieces.get(1) != null) {
+					surroundingLocations.add(new Location(right, down, surroundingPieces.get(1).getTeamColor(), surroundingPieces.get(1).isKing(), GameTile.TILE_WHITE));
+				} else {
+					surroundingLocations.add(new Location(right, down, Location.NULL_TEAM_COLOR, false, GameTile.TILE_WHITE));
+				}
+			}			
+		}
+		
+		for (Location poss : surroundingLocations) {
+			if (this.checkValidMove(selection, poss)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	//in order of downleft, downright, upleft, upright
+	//null if no piece there
+	private List<CheckerPiece> getSurroundingPieces(Location center) {
+		
+		int frX = center.getX();
+		int frY = center.getY();
 		
 		CheckerPiece downLeft;
 		CheckerPiece downRight;
 		CheckerPiece upLeft;
 		CheckerPiece upRight;
 		
-		//check what pieces (if any) exist around this piece
+		//check what pieces (if any) exist around center
 		if (frX - 1 < 0 || frY + 1 > CheckersModel.LENGTH_CHECKERS_BOARD - 1) {
 			downLeft = null;
 		} else {
@@ -220,94 +405,13 @@ public class CheckersModel {
 			upRight = (CheckerPiece) this.board.getPieceAtLocation(frX + 1, frY - 1);
 		}
 		
-		//now finally check if the move/jump is valid
+		List<CheckerPiece> surroundingPieces = new ArrayList<>();
+		surroundingPieces.add(downLeft);
+		surroundingPieces.add(downRight);
+		surroundingPieces.add(upLeft);
+		surroundingPieces.add(upRight);
 		
-		if (this.currentPlayer == BiColorPiece.TEAM1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
-			
-			//jumping an enemy is available and must be done
-			if ((downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 || downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2)
-					&& (toX == frX - 1 && toY == frY + 1 || toX == frX + 1 && toY == frY + 1)) {
-				return false;
-			}
-			
-			//if a piece exists then jump it, otherwise just walk
-			if (downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY + 2) {
-				return true;
-			} else if (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY + 2) {
-				return true;
-			} else if (toX == frX - 1 && toY == frY + 1
-					|| toX == frX + 1 && toY == frY + 1){
-				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
-				return true;
-			} else if (moveFrom.getIsKing()) {
-				//kings can move backwards
-				if (upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY - 2) {
-					return true;
-				} else if (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY - 2) {
-					return true;
-				} else if (toX == frX - 1 && toY == frY - 1
-						|| toX == frX + 1 && toY == frY - 1){
-					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
-					return true;
-				} 
-			}		
-		}
-		
-		if (this.currentPlayer == BiColorPiece.TEAM2 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
-			
-			//jumping an enemy is available and must be done
-			if ((upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 || upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1)
-					&& (toX == frX - 1 && toY == frY - 1 || toX == frX + 1 && toY == frY - 1)) {
-				return false;
-			}
-			
-			//if a piece exists then jump it, otherwise just walk
-			if (upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 && toX == frX - 2 && toY == frY - 2) {
-				return true;
-			} else if (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1 && toX == frX + 2 && toY == frY - 2) {
-				return true;
-			} else if (toX == frX - 1 && toY == frY - 1
-					|| toX == frX + 1 && toY == frY - 1){
-				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
-				return true;
-			} else if (moveFrom.getIsKing()) {
-				//kings can move backwards
-				if (downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM1 && toX == frX - 2 && toY == frY + 2) {
-					return true;
-				} else if (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM1 && toX == frX + 2 && toY == frY + 2) {
-					return true;
-				} else if (toX == frX - 1 && toY == frY + 1
-						|| toX == frX + 1 && toY == frY + 1){
-					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
-					return true;
-				} 
-			}
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Remove a piece from the given Location
-	 * @param removeFrom Location from which to remove a piece on the board
-	 * @modifies this CheckersModel
-	 * @effects if a piece was present at this location, it has been removed
-	 */
-	public void removePiece(Location removeFrom) {
-		this.board.putPieceAtLocation(removeFrom.getX(), removeFrom.getY(), null);
-	}
-	
-	/**
-	 * Returns if player1 or player2 has won, if they have.
-	 * @return A string representing player1, player2, or that no one has won yet.
-	 */
-	public String declareVictor() {
-		return null;
-	}
-	
-	@Override
-	public String toString() {
-		return this.board.toString();
+		return surroundingPieces;
 	}
 }
 

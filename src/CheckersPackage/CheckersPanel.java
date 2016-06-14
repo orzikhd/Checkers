@@ -130,12 +130,18 @@ public class CheckersPanel extends JPanel {
 	//return if this piece can be moved right now
 	//package-private
 	boolean validSelection(int index) {
+		
 		Location selection = this.masterModel.getBoardState().get(index);
-		if (selection.getPieceTeamColor() == Location.NULL_TEAM_COLOR) {
+		return this.masterModel.checkValidSelection(selection);
+		
+		/*
+		Location selection = this.masterModel.getBoardState().get(index);
+		if (selection.getPieceTeamColor() != this.masterModel.getCurrentPlayer()) {
 			return false;
 		} else {
 			return true;
 		}
+		*/
 	}
 	
 	/**

@@ -28,6 +28,8 @@ public class Location {
 	 * @param X component of location
 	 * @param Y component of location
 	 * @param pieceTeamColor int corresponding to a team color
+	 * @param isKing true if the piece here is a king, false otherwise
+	 * @param tileColor String representing the present tile color
 	 * @requires X >= 0 and Y >= 0
 	 */
 	public Location(int X, int Y, int pieceTeamColor, boolean isKing, String tileColor) {
