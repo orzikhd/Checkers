@@ -37,14 +37,13 @@ public class CheckersPanel extends JPanel {
 		this.masterModel = new CheckersModel();
 		this.menu = new MenuPanel(masterModel, this);
 		this.tiles = new ArrayList<JPanel>();
+		this.addMouseListener(new CheckerListener(this));
 		
 		masterModel.setUpBoard();
 		
 		boardWrapper.setLayout(new GridLayout(8, 8));
 		for (int i = 0; i < 64; i++) {
 			JPanel currLocPanel = new JPanel();
-			CheckerListener currListener = new CheckerListener(this, i);
-			currLocPanel.addMouseListener(currListener);
 			tiles.add(currLocPanel);
 			boardWrapper.add(currLocPanel);
 		}
@@ -137,6 +136,14 @@ public class CheckersPanel extends JPanel {
 		} else {
 			return true;
 		}
+	}
+	
+	/**
+	 * Returns the width of just the checkerboard
+	 * @return int width of the checkerboard
+	 */
+	public int getBoardWidth() {
+		return this.boardWrapper.getWidth();
 	}
 }
 

@@ -16,22 +16,38 @@ public class CheckerListener implements MouseListener{
 	
 	public static final int BORDER_THICKNESS = 4;
 	
-	private int boardIndex;
 	private CheckersPanel masterPanel;
+	private int currentSquareX;
+	private int currentSquareY;
+	private int previousSquareX;
+	private int previousSqaureY;
 	
-	public CheckerListener(CheckersPanel masterPanel, int boardIndex) {
-		this.boardIndex = boardIndex;
+	public CheckerListener(CheckersPanel masterPanel) {
 		this.masterPanel = masterPanel;
+		this.currentSquareX = 100; //some dummy value
+		this.currentSquareY = 100; //some dummy value
+		this.previousSquareX = 100;
+		this.previousSqaureY = 100;
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		
-		Location checker = masterPanel.getLocationAtIndex(this.boardIndex);
-		JPanel checkerPanel = masterPanel.getTileAtIndex(this.boardIndex);
+		int squareWidth = this.masterPanel.getBoardWidth() / 8;
+		
+		System.out.println(e.getX() / squareWidth + ", " +  e.getY() / squareWidth);
+		
+		this.currentSquareX = e.getX() / squareWidth;
+		this.currentSquareY = e.getY() / squareWidth;
+		
+		int boardIndex = 8 * this.currentSquareY + currentSquareX;
+		
+		
+		Location checker = masterPanel.getLocationAtIndex(boardIndex);
+		JPanel checkerPanel = masterPanel.getTileAtIndex(boardIndex);
 		
 		clearAllOtherBorders();
-		boolean valid = masterPanel.validSelection(this.boardIndex);
+		boolean valid = masterPanel.validSelection(boardIndex);
 		
 		if (valid) {
 			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, CheckerListener.BORDER_THICKNESS));
@@ -39,21 +55,16 @@ public class CheckerListener implements MouseListener{
 			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, CheckerListener.BORDER_THICKNESS));
 		}
 		
-		System.out.println(checker.getPieceTeamColor());
-		/*
-		LineBorder checkerBorder = (LineBorder) checkerPanel.getBorder();
-		if (checkerBorder.getLineColor().equals(Color.PINK)) {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, CheckerListener.BORDER_THICKNESS));
-		} else {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, CheckerListener.BORDER_THICKNESS));
-		}
-		*/
+		//System.out.println(checker.getPieceTeamColor());
 	}
 	
 	//clear all borders not associated with current clicked piece; i.e. only one piece highlighted at a time
 	private void clearAllOtherBorders() {
+		
+		int boardIndex = 8 * this.currentSquareY + currentSquareX;
+		
 		for (int i = 0; i < 64; i++) {
-			if (i != this.boardIndex) {
+			if (i != boardIndex) {
 				Location checker = masterPanel.getLocationAtIndex(i);
 				JPanel checkerPanel = masterPanel.getTileAtIndex(i);
 				//System.out.println(checker.getTileColor());

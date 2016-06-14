@@ -15,6 +15,7 @@ public class CheckersModel {
 	private CheckersBoard board;
 	private Set<CheckerPiece> p1Pieces;
 	private Set<CheckerPiece> p2Pieces;
+	private int currentPlayer;
 	private static final int LENGTH_CHECKERS_BOARD = 8;
 	
 	/**
@@ -26,6 +27,7 @@ public class CheckersModel {
 		
 		this.p1Pieces = new HashSet<CheckerPiece>();
 		this.p2Pieces = new HashSet<CheckerPiece>();
+		this.currentPlayer = Location.NULL_TEAM_COLOR;
 	}
 	
 	/**
@@ -82,13 +84,27 @@ public class CheckersModel {
 	}
 	
 	/**
-	 * Set up game pieces for a game of Checkers
+	 * Switches the current player in the game
+	 */
+	public void switchPlayer() {
+		if (this.currentPlayer == BiColorPiece.TEAM1) {
+			this.currentPlayer = BiColorPiece.TEAM2;
+		} else {
+			this.currentPlayer = BiColorPiece.TEAM1;
+		}
+	}
+	
+	/**
+	 * Set up game pieces for a game of Checkers.
+	 * Board needs to be set up before a player can make a move.
 	 * If the board isn't empty, empty it first for expected results.
 	 * @modifies this CheckersModel
 	 */
 	public void setUpBoard() {
 		
 		CheckerPiece curr;
+		
+		this.currentPlayer = BiColorPiece.TEAM1;
 		
 		//place player1 pieces on top
 		for (int i = 0; i < 3; i++) {
@@ -150,13 +166,22 @@ public class CheckersModel {
 	 * Returns if a move from one location to another is valid for the piece at the from location.
 	 * @param moveFrom Location of piece to move from
 	 * @param moveTo Location to move piece to
-	 * @return true if valid move by any means, false otherwise
+	 * @return true if valid move for current player, false otherwise
 	 */
 	public boolean checkValidMove(Location moveFrom, Location moveTo) {
 		
+		//if there is no current player, no move is valid
+		if (this.currentPlayer == Location.NULL_TEAM_COLOR) {
+			return false;
+		}
+		
 		//if a piece is at the spot you want to move to, there is no way you can go there
-		//also, if there is no piece at the moveFrom location, no valid move can be made; so also false
-		if (moveTo.getPieceTeamColor() != Location.NULL_TEAM_COLOR && moveFrom.getPieceTeamColor() != Location.NULL_TEAM_COLOR) {
+		if (moveTo.getPieceTeamColor() != Location.NULL_TEAM_COLOR) {
+			return false;
+		}
+		
+		//if there is no piece at the moveFrom location, no valid move can be made
+		if (moveFrom.getPieceTeamColor() == Location.NULL_TEAM_COLOR) {
 			return false;
 		}
 		
@@ -197,7 +222,7 @@ public class CheckersModel {
 		
 		//now finally check if the move/jump is valid
 		
-		if (moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
+		if (this.currentPlayer == BiColorPiece.TEAM1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
 			
 			//jumping an enemy is available and must be done
 			if ((downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 || downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2)
@@ -228,7 +253,7 @@ public class CheckersModel {
 			}		
 		}
 		
-		if (moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
+		if (this.currentPlayer == BiColorPiece.TEAM2 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
 			
 			//jumping an enemy is available and must be done
 			if ((upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 || upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1)

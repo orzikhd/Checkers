@@ -19,29 +19,26 @@ public class MenuPanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = -5870916876473839398L;
 	private CheckersModel masterModel;
 	private CheckersPanel masterPanel;
+	private JLabel message;
 	
 	public MenuPanel(CheckersModel masterModel, CheckersPanel masterPanel) {
 		super();
 		
 		this.masterModel = masterModel;
 		this.masterPanel = masterPanel;
-		
+		this.message = new JLabel();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		JLabel titleLabel = new JLabel();
 		Font titleFont = new Font("Verdana", Font.BOLD, 40);
+		Font messageFont = new Font("Verdana", Font.BOLD, 30);
+		
+		JLabel titleLabel = new JLabel();
 		titleLabel.setFont(titleFont);
 		titleLabel.setText("Checkers!");
 		this.add(titleLabel);
 		
-		/*
-			JPanel panel = new JPanel();
-			panel.add(new JButton(new AbstractAction("name of button") {
-			    public void actionPerformed(ActionEvent e) {
-			        //do stuff here
-			    }
-			}));
-		 */
+		this.message.setFont(messageFont);
+		
 		JButton clearBoard = new JButton("Clear Board");
 		clearBoard.setActionCommand("clear");
 		clearBoard.addActionListener(this);

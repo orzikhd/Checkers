@@ -100,6 +100,7 @@ public class CheckersModelTest {
 	public void validateJumpOnceTest() {
 		CheckersModel newModel = new CheckersModel();
 		newModel.setUpBoard();
+		newModel.switchPlayer();
 		Location startTeam2Spot = new Location(2, 5, BiColorPiece.TEAM2, false, "B");
 		Location moveUpRight = new Location(3, 4, Location.NULL_TEAM_COLOR, false, "B");
 		Location moveUpRightPostMove = new Location(3, 4, BiColorPiece.TEAM2, false, "B");
@@ -107,6 +108,27 @@ public class CheckersModelTest {
 		newModel.movePiece(startTeam2Spot, moveUpRight);
 		newModel.movePiece(moveUpRightPostMove, moveUpRight2);
 		
+		newModel.switchPlayer();
+		List<Location> preJump = newModel.getBoardState();
+		//team 1 piece at 3, 2 so 2*8 + 3 = 19
+		//team 2 piece at 4, 3 so 3*8 + 4 = 28
+		//team 1 piece new location would be 5, 4 so 4*8 + 5 = 37
+		assertTrue(newModel.checkValidMove(preJump.get(19), preJump.get(37)));
+	}
+	
+	@Test
+	public void JumpOnceTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		newModel.switchPlayer();
+		Location startTeam2Spot = new Location(2, 5, BiColorPiece.TEAM2, false, "B");
+		Location moveUpRight = new Location(3, 4, Location.NULL_TEAM_COLOR, false, "B");
+		Location moveUpRightPostMove = new Location(3, 4, BiColorPiece.TEAM2, false, "B");
+		Location moveUpRight2 = new Location(4, 3, Location.NULL_TEAM_COLOR, false, "B");
+		newModel.movePiece(startTeam2Spot, moveUpRight);
+		newModel.movePiece(moveUpRightPostMove, moveUpRight2);
+		
+		newModel.switchPlayer();
 		List<Location> preJump = newModel.getBoardState();
 		//team 1 piece at 3, 2 so 2*8 + 3 = 19
 		//team 2 piece at 4, 3 so 3*8 + 4 = 28
@@ -116,7 +138,7 @@ public class CheckersModelTest {
 		List<Location> postJump = newModel.getBoardState();
 		assertEquals(postJump.get(19).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
 		assertEquals(postJump.get(28).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
-		assertEquals(postJump.get(37).getPieceTeamColor(), BiColorPiece.TEAM1);
+		assertEquals(postJump.get(37).getPieceTeamColor(), BiColorPiece.TEAM1);		
 	}
 	
 	@Test
@@ -128,6 +150,17 @@ public class CheckersModelTest {
 		newModel.removePiece(removeTestLoc);
 		assertEquals(newModel.getBoardState().get(1).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
 		
+	}
+	
+	@Test
+	public void RespectCurrentPlayerTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		newModel.switchPlayer();
+		//this is the test for moving once, but should all fail since now its TEAM2 playing
+		Location LeftEdgePiece = new Location(7, 2, BiColorPiece.TEAM1, false, "B");
+		Location moveDownLeft = new Location(6, 3, Location.NULL_TEAM_COLOR, false, "B");
+		assertTrue(!newModel.checkValidMove(LeftEdgePiece, moveDownLeft));
 	}
 	
 	@Test
