@@ -1,11 +1,14 @@
 package CheckersPackage;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -30,31 +33,43 @@ public class MenuPanel extends JPanel implements ActionListener{
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		Font titleFont = new Font("Verdana", Font.BOLD, 40);
-		Font messageFont = new Font("Verdana", Font.BOLD, 30);
+		Font messageFont = new Font("Verdana", Font.BOLD, 20);
 		
 		JLabel titleLabel = new JLabel();
 		titleLabel.setFont(titleFont);
 		titleLabel.setText("Checkers!");
-		this.add(titleLabel);
+		titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);		
 		
 		this.message.setFont(messageFont);
+		this.message.setText("Welcome to Checkers!");
+		this.message.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		JPanel buttonWrapper = new JPanel();
+		buttonWrapper.setLayout(new BoxLayout(buttonWrapper, BoxLayout.LINE_AXIS));
 		
 		JButton clearBoard = new JButton("Clear Board");
 		clearBoard.setActionCommand("clear");
 		clearBoard.addActionListener(this);
-		this.add(clearBoard);
+		buttonWrapper.add(clearBoard);
 		
 		JButton resetBoard = new JButton("Reset Board");
 		resetBoard.setActionCommand("reset");
 		resetBoard.addActionListener(this);
-		this.add(resetBoard);
-		//testLabel.setBorder(BorderFactory.createEtchedBorder());
+		buttonWrapper.add(resetBoard);
 		
+		this.add(Box.createVerticalStrut(10));
+		this.add(titleLabel);
+		this.add(message);
+		this.add(Box.createVerticalStrut(300));
+		this.add(buttonWrapper);	
+		this.add(Box.createVerticalStrut(10));
 	}
 	
 	@Override 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		this.message.setText("curr size: " + this.getWidth() + ", " + this.getHeight());
+		//this.message.setText("curr parent size: " + this.getParent().getWidth() + ", " + this.getParent().getHeight());
 	}
 
 	@Override

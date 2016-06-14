@@ -2,6 +2,7 @@ package CheckersPackage;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -50,13 +53,20 @@ public class CheckersPanel extends JPanel {
 			tiles.add(currLocPanel);
 			boardWrapper.add(currLocPanel);
 		}
-		
+		boardWrapper.setPreferredSize(new Dimension(1024, 1024));
+		boardWrapper.setBackground(Color.WHITE);
 		boardWrapper.validate();
-		boardWrapper.setBackground(Color.GREEN);
+		
 		menu.setBackground(Color.ORANGE);
-				
-		this.add(boardWrapper, BorderLayout.WEST);
-		this.add(menu, BorderLayout.CENTER);
+		menu.setPreferredSize(new Dimension(500, 1024));
+		menu.validate();
+		
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));	
+		this.add(Box.createRigidArea(new Dimension(10, 0)));
+		this.add(boardWrapper);
+		this.add(Box.createRigidArea(new Dimension(10, 0)));
+		this.add(menu);
+		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.needsRedraw = false;
 		
 		drawState();

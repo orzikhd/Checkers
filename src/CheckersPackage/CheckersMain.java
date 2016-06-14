@@ -11,7 +11,7 @@ public class CheckersMain {
 	public static void main(String args[]) {
 		JFrame frame = new JFrame("Checkers!");
 		
-		final Dimension screenSize = new Dimension(1224, 1024);
+		final Dimension screenSize = new Dimension(1524, 1024);
 		
 		//terminate app when closed
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
