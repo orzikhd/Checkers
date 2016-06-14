@@ -22,6 +22,7 @@ public class CheckersPanel extends JPanel {
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 8107067215852039233L;
 	private JPanel boardWrapper;
 	private List<JPanel> tiles;
