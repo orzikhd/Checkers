@@ -311,12 +311,18 @@ public class CheckersModel {
 		
 		List<Location> surroundingLocations = new ArrayList<>();
 		List<CheckerPiece> surroundingPieces = this.getSurroundingPieces(selection);
+		List<CheckerPiece> surroundingJumpPieces = this.getSurroundingJumpPieces(selection);
+		
 		int frX = selection.getX();
 		int frY = selection.getY();
 		int left = frX - 1;
+		int farLeft = frX - 2;
 		int right = frX + 1;
+		int farRight = frX + 2;
 		int up = frY - 1;
+		int farUp = frY - 2;
 		int down = frY + 1;
+		int farDown = frY + 2;
 		
 		//valid to move left
 		if (left > 0) {
@@ -330,7 +336,7 @@ public class CheckersModel {
 				
 			}
 			//valid to move down
-			if (down < this.LENGTH_CHECKERS_BOARD) {
+			if (down < CheckersModel.LENGTH_CHECKERS_BOARD) {
 				if (surroundingPieces.get(0) != null) {
 					surroundingLocations.add(new Location(left, down, surroundingPieces.get(0).getTeamColor(), surroundingPieces.get(0).isKing(), GameTile.TILE_WHITE));
 				} else {
@@ -340,7 +346,7 @@ public class CheckersModel {
 		}
 		
 		//valid to move right
-		if (right < this.LENGTH_CHECKERS_BOARD) {
+		if (right < CheckersModel.LENGTH_CHECKERS_BOARD) {
 			//valid to move up
 			if (up > 0) {
 				if (surroundingPieces.get(3) != null) {
@@ -350,11 +356,52 @@ public class CheckersModel {
 				}
 			}
 			//valid to move down
-			if (down < this.LENGTH_CHECKERS_BOARD) {
+			if (down < CheckersModel.LENGTH_CHECKERS_BOARD) {
 				if (surroundingPieces.get(1) != null) {
 					surroundingLocations.add(new Location(right, down, surroundingPieces.get(1).getTeamColor(), surroundingPieces.get(1).isKing(), GameTile.TILE_WHITE));
 				} else {
 					surroundingLocations.add(new Location(right, down, Location.NULL_TEAM_COLOR, false, GameTile.TILE_WHITE));
+				}
+			}			
+		}
+		
+		//valid to move far left
+		if (farLeft > 0) {
+			//valid to move far up
+			if (farUp > 0) {
+				if (surroundingJumpPieces.get(2) != null) {
+					surroundingLocations.add(new Location(farLeft, farUp, surroundingJumpPieces.get(2).getTeamColor(), surroundingJumpPieces.get(2).isKing(), GameTile.TILE_WHITE));
+				} else {
+					surroundingLocations.add(new Location(farLeft, farUp, Location.NULL_TEAM_COLOR, false, GameTile.TILE_WHITE));
+				}
+				
+			}
+			//valid to move far down
+			if (farDown < CheckersModel.LENGTH_CHECKERS_BOARD) {
+				if (surroundingJumpPieces.get(0) != null) {
+					surroundingLocations.add(new Location(farLeft, farDown, surroundingJumpPieces.get(0).getTeamColor(), surroundingJumpPieces.get(0).isKing(), GameTile.TILE_WHITE));
+				} else {
+					surroundingLocations.add(new Location(farLeft, farDown, Location.NULL_TEAM_COLOR, false, GameTile.TILE_WHITE));
+				}
+			}
+		}
+		
+		//valid to move right
+		if (farRight < CheckersModel.LENGTH_CHECKERS_BOARD) {
+			//valid to move up
+			if (farUp > 0) {
+				if (surroundingJumpPieces.get(3) != null) {
+					surroundingLocations.add(new Location(farRight, farUp, surroundingJumpPieces.get(3).getTeamColor(), surroundingJumpPieces.get(3).isKing(), GameTile.TILE_WHITE));
+				} else {
+					surroundingLocations.add(new Location(farRight, farUp, Location.NULL_TEAM_COLOR, false, GameTile.TILE_WHITE));
+				}
+			}
+			//valid to move down
+			if (farDown < CheckersModel.LENGTH_CHECKERS_BOARD) {
+				if (surroundingJumpPieces.get(1) != null) {
+					surroundingLocations.add(new Location(farRight, farDown, surroundingJumpPieces.get(1).getTeamColor(), surroundingJumpPieces.get(1).isKing(), GameTile.TILE_WHITE));
+				} else {
+					surroundingLocations.add(new Location(farRight, farDown, Location.NULL_TEAM_COLOR, false, GameTile.TILE_WHITE));
 				}
 			}			
 		}
@@ -413,6 +460,52 @@ public class CheckersModel {
 		
 		return surroundingPieces;
 	}
+	
+	//in order of far downleft, far downright, far upleft, far upright
+	//null if no piece there
+	private List<CheckerPiece> getSurroundingJumpPieces(Location center) {
+		
+		int frX = center.getX();
+		int frY = center.getY();
+		
+		CheckerPiece farDownLeft;
+		CheckerPiece farDownRight;
+		CheckerPiece farUpLeft;
+		CheckerPiece farUpRight;
+		
+		//check what pieces (if any) exist around center
+		if (frX - 2 < 0 || frY + 2 > CheckersModel.LENGTH_CHECKERS_BOARD - 1) {
+			farDownLeft = null;
+		} else {
+			farDownLeft = (CheckerPiece) this.board.getPieceAtLocation(frX - 2, frY + 2);
+		}
+		
+		if (frX + 2 > CheckersModel.LENGTH_CHECKERS_BOARD - 1 || frY + 2 > CheckersModel.LENGTH_CHECKERS_BOARD - 1) {
+			farDownRight = null;
+		} else {
+			farDownRight = (CheckerPiece) this.board.getPieceAtLocation(frX + 2, frY + 2);
+		}
+		
+		if (frX - 2 < 0 || frY - 2 < 0) {
+			farUpLeft = null;
+		} else {
+			farUpLeft = (CheckerPiece) this.board.getPieceAtLocation(frX - 2, frY - 2);
+		}
+		
+		if (frX + 2 > CheckersModel.LENGTH_CHECKERS_BOARD - 1 || frY - 2 < 0) {
+			farUpRight = null;
+		} else {
+			farUpRight = (CheckerPiece) this.board.getPieceAtLocation(frX + 2, frY - 2);
+		}
+		
+		List<CheckerPiece> surroundingPieces = new ArrayList<>();
+		surroundingPieces.add(farDownLeft);
+		surroundingPieces.add(farDownRight);
+		surroundingPieces.add(farUpLeft);
+		surroundingPieces.add(farUpRight);
+		
+		return surroundingPieces;
+	}	
 }
 
 

@@ -27,6 +27,7 @@ public class CheckersPanel extends JPanel {
 	private List<JPanel> tiles;
 	private MenuPanel menu;
 	private CheckersModel masterModel;
+	private CheckerListener listener;
 	private boolean needsRedraw;
 	
 	public CheckersPanel() {
@@ -37,7 +38,8 @@ public class CheckersPanel extends JPanel {
 		this.masterModel = new CheckersModel();
 		this.menu = new MenuPanel(masterModel, this);
 		this.tiles = new ArrayList<JPanel>();
-		this.addMouseListener(new CheckerListener(this));
+		this.listener = new CheckerListener(this);
+		this.boardWrapper.addMouseListener(listener);
 		
 		masterModel.setUpBoard();
 		
@@ -112,9 +114,30 @@ public class CheckersPanel extends JPanel {
 	 */
 	public void requestUpdate() {
 		this.needsRedraw = true;
+		this.listener.resetAllTracking();
 		this.repaint();
 	}
 	
+	//Requests the model to execute a move
+	//package-private
+	void requestMove(int startIndex, int endIndex) {
+		Location start = this.masterModel.getBoardState().get(startIndex);
+		Location end = this.masterModel.getBoardState().get(endIndex);
+		
+		this.masterModel.movePiece(start, end);		
+		this.requestUpdate();
+	}
+	
+	
+	//Determines if a move with these indices is valid
+	//package-private
+	boolean validMove(int startIndex, int endIndex) {
+		Location start = this.masterModel.getBoardState().get(startIndex);
+		Location end = this.masterModel.getBoardState().get(endIndex);
+		
+		return this.masterModel.checkValidMove(start, end);
+	}			
+			
 	//return the tile of the index
 	//package-private
 	JPanel getTileAtIndex(int index) {
@@ -133,15 +156,6 @@ public class CheckersPanel extends JPanel {
 		
 		Location selection = this.masterModel.getBoardState().get(index);
 		return this.masterModel.checkValidSelection(selection);
-		
-		/*
-		Location selection = this.masterModel.getBoardState().get(index);
-		if (selection.getPieceTeamColor() != this.masterModel.getCurrentPlayer()) {
-			return false;
-		} else {
-			return true;
-		}
-		*/
 	}
 	
 	/**
