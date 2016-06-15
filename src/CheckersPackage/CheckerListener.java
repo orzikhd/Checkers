@@ -21,8 +21,14 @@ public class CheckerListener implements MouseListener{
 	private static final Color VALID_FOLLOWUP = Color.YELLOW;
 	private static final Color INVALID_SELECTION = Color.PINK;
 	private static final Color INVALID_FOLLOWUP = Color.GRAY;
+	private static final String RESET_MESSAGE = "Select piece";
+	private static final String INVALID_SELECTION_MESSAGE = "You cannot move this piece";
+	private static final String SELECT_FOLLOWUP_MESSAGE = "Choose where to move it";
+	private static final String INVALID_FOLLOWUP_MESSAGE = "You cannot move here";
+	private static final String CONFIRM_MOVE_MESSAGE = "Click again to confirm move";
 	
 	private CheckersPanel masterPanel;
+	private String statusMessage;
 	//currentSquare is the square clicked to begin an action
 	private int currentSquareX;
 	private int currentSquareY;
@@ -32,6 +38,7 @@ public class CheckerListener implements MouseListener{
 	
 	public CheckerListener(CheckersPanel masterPanel) {
 		this.masterPanel = masterPanel;
+		this.statusMessage = CheckerListener.RESET_MESSAGE;
 		this.currentSquareX = CheckerListener.DUMMY_COORDINATE;
 		this.currentSquareY = CheckerListener.DUMMY_COORDINATE;
 		this.followUpSquareX = CheckerListener.DUMMY_COORDINATE;
@@ -45,7 +52,13 @@ public class CheckerListener implements MouseListener{
 		this.currentSquareX = CheckerListener.DUMMY_COORDINATE;
 		this.currentSquareY = CheckerListener.DUMMY_COORDINATE;
 		this.followUpSquareX = CheckerListener.DUMMY_COORDINATE;
-		this.followUpSquareY = CheckerListener.DUMMY_COORDINATE;		
+		this.followUpSquareY = CheckerListener.DUMMY_COORDINATE;	
+		this.statusMessage = CheckerListener.RESET_MESSAGE;
+	}
+	
+	//package-private
+	String getStatusMessage() {
+		return this.statusMessage;
 	}
 	
 	@Override
@@ -53,92 +66,107 @@ public class CheckerListener implements MouseListener{
 		
 		int squareWidth = this.masterPanel.getBoardWidth() / 8;
 				
-		System.out.println(e.getX() / squareWidth + ", " +  e.getY() / squareWidth);
+		//System.out.println(e.getX() / squareWidth + ", " +  e.getY() / squareWidth);
 		
 		int justPressedX = e.getX() / squareWidth;
 		int justPressedY = e.getY() / squareWidth;
-				
-		if (justPressedX == this.currentSquareX && justPressedY == this.currentSquareY) {
-			//situation: they pressed on their original selection again, clearing it
+		
+		System.out.println(justPressedX + ", " + justPressedY); 
+		
+		int justPressedIndex = 8 * justPressedY + justPressedX;
+		int currentIndex = 8 * this.currentSquareY + this.currentSquareX;
+		int followUpIndex = 8 * this.followUpSquareY + this.followUpSquareX;
+		int dummyIndex = 8 * CheckerListener.DUMMY_COORDINATE + CheckerListener.DUMMY_COORDINATE;
+		
+		boolean justPressedValid = masterPanel.validSelection(justPressedIndex);
+		boolean currentValid = false;
+
+		//check that it exists on the board before checking if its valid
+		if (currentIndex != dummyIndex) {
+			currentValid = masterPanel.validSelection(currentIndex);
+		}
+		
+		if (!currentValid) {
+			//situation: a previous primary selection was invalid, so replace it
 			this.clearSelectionBorders();
-			this.currentSquareX = CheckerListener.DUMMY_COORDINATE;
-			this.currentSquareY = CheckerListener.DUMMY_COORDINATE;
-			
-		} else if (this.currentSquareX == CheckerListener.DUMMY_COORDINATE && this.currentSquareY == CheckerListener.DUMMY_COORDINATE) {
-			//situation: they pressed on a square while nothing was selected, selecting a new current
 			this.currentSquareX = justPressedX;
 			this.currentSquareY = justPressedY;
-			this.clearAllOtherBorders();
-			this.setCurrentBorder();	
+			this.setCurrentBorder();
+			if (justPressedValid) {
+				//and this is a valid primary selection
+				this.statusMessage = CheckerListener.SELECT_FOLLOWUP_MESSAGE;
+			} else {
+				//and this is an invalid primary selection
+				this.statusMessage = CheckerListener.INVALID_SELECTION_MESSAGE;
+			}
+			
+		} else if (justPressedX == this.currentSquareX && justPressedY == this.currentSquareY) {
+			//situation: they pressed on their original selection again, clearing it
+			this.clearBorderAt(currentIndex);
+			this.clearBorderAt(followUpIndex);
+			this.currentSquareX = CheckerListener.DUMMY_COORDINATE;
+			this.currentSquareY = CheckerListener.DUMMY_COORDINATE;
+			this.statusMessage = CheckerListener.RESET_MESSAGE;
 			
 		} else if (justPressedX == this.followUpSquareX && justPressedY == this.followUpSquareY) {
-			//situation: they pressed on the followUpSquare again, confirming the move
-			int currIndex = 8 * this.currentSquareY + this.currentSquareX;
-			int followIndex = 8 * this.followUpSquareY + this.followUpSquareX;
-			
-			//the move is actually valid-- execute it
-			if (this.masterPanel.validMove(currIndex, followIndex)) {
+			//situation: they pressed on the followUpSquare again
+			//if the move is actually valid-- execute it
+			if (this.masterPanel.validMove(currentIndex, followUpIndex)) {
 				this.clearAllOtherBorders();
-				this.clearSelectionBorders();
+				this.clearBorderAt(currentIndex);
 				
-				this.masterPanel.requestMove(currIndex, followIndex);
+				this.masterPanel.requestMove(currentIndex, followUpIndex);
+				this.masterPanel.switchPlayer();
 				this.currentSquareX = CheckerListener.DUMMY_COORDINATE;
 				this.currentSquareY = CheckerListener.DUMMY_COORDINATE;
 				this.followUpSquareX = CheckerListener.DUMMY_COORDINATE;
 				this.followUpSquareY = CheckerListener.DUMMY_COORDINATE;
+				this.statusMessage = CheckerListener.RESET_MESSAGE;
 				
-				/*
-				this.currentSquareX = this.followUpSquareX;
-				this.currentSquareY = this.followUpSquareY;
+			} else {
+				//followUp was invalid so clear it
+				this.clearBorderAt(followUpIndex);
 				this.followUpSquareX = CheckerListener.DUMMY_COORDINATE;
 				this.followUpSquareY = CheckerListener.DUMMY_COORDINATE;
-				System.out.println("setting current border on: " + this.currentSquareX + ", " + this.currentSquareY);
-				this.setCurrentBorder();
-				this.masterPanel.repaint();
-				*/
+				this.statusMessage = CheckerListener.INVALID_FOLLOWUP_MESSAGE;
 			}
-
+			
 		} else {
 			//situation: they pressed somewhere new from both squares, signifying a new followup square
-			this.clearSelectionBorders();
+			//check if its a valid move and notify appropriately
+		
+			this.clearBorderAt(currentIndex);
+			this.clearBorderAt(followUpIndex);
+			
 			this.followUpSquareX = justPressedX;
 			this.followUpSquareY = justPressedY;
+
+			int currIndex = 8 * this.currentSquareY + this.currentSquareX;
+			int followIndex = 8 * this.followUpSquareY + this.followUpSquareX;
+			
 			this.setCurrentBorder();
 			this.setFollowUpBorder();
+			if (this.masterPanel.validMove(currIndex, followIndex)) {
+				this.statusMessage = CheckerListener.CONFIRM_MOVE_MESSAGE;
+			} else {
+				this.statusMessage = CheckerListener.INVALID_FOLLOWUP_MESSAGE;
+			}
 		}
 		
-		
-		/*
-		int boardIndex = 8 * this.currentSquareY + currentSquareX;
-		
-		
-		Location checker = masterPanel.getLocationAtIndex(boardIndex);
-		JPanel checkerPanel = masterPanel.getTileAtIndex(boardIndex);
-		
-		clearAllOtherBorders();
-		boolean valid = masterPanel.validSelection(boardIndex);
-		
-		if (valid) {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, CheckerListener.BORDER_THICKNESS));
-		} else {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.PINK, CheckerListener.BORDER_THICKNESS));
-		}
-		*/
-		//System.out.println(checker.getPieceTeamColor());
+		this.masterPanel.repaint();
+		System.out.println(statusMessage);
 	}
 	
 	//set the border on the current square based on validitity etc
 	private void setCurrentBorder() {
-		int boardIndex = 8 * this.currentSquareY + this.currentSquareX;
+		int currIndex = 8 * this.currentSquareY + this.currentSquareX;
 		
-		JPanel checkerPanel = masterPanel.getTileAtIndex(boardIndex);
-		
-		boolean valid = masterPanel.validSelection(boardIndex);
+		boolean valid = masterPanel.validSelection(currIndex);
 		
 		if (valid) {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(CheckerListener.VALID_SELECTION, CheckerListener.BORDER_THICKNESS));
+			this.colorBorderAt(currIndex, CheckerListener.VALID_SELECTION);
 		} else {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(CheckerListener.INVALID_SELECTION, CheckerListener.BORDER_THICKNESS));
+			this.colorBorderAt(currIndex, CheckerListener.INVALID_SELECTION);
 		}
 	}
 	
@@ -147,14 +175,12 @@ public class CheckerListener implements MouseListener{
 		int currIndex = 8 * this.currentSquareY + this.currentSquareX;
 		int followIndex = 8 * this.followUpSquareY + this.followUpSquareX;
 		
-		JPanel checkerPanel = masterPanel.getTileAtIndex(followIndex);
-		
 		boolean valid = masterPanel.validMove(currIndex, followIndex);
 		
 		if (valid) {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(CheckerListener.VALID_FOLLOWUP, CheckerListener.BORDER_THICKNESS));
+			this.colorBorderAt(followIndex, CheckerListener.VALID_FOLLOWUP);
 		} else {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(CheckerListener.INVALID_FOLLOWUP, CheckerListener.BORDER_THICKNESS));
+			this.colorBorderAt(followIndex, CheckerListener.INVALID_FOLLOWUP);
 		}		
 	}
 	
@@ -165,7 +191,7 @@ public class CheckerListener implements MouseListener{
 		
 		for (int i = 0; i < 64; i++) {
 			if (i != boardIndex) {
-				resetBorderAt(i);
+				this.clearBorderAt(i);
 			}
 		}
 	}
@@ -174,27 +200,30 @@ public class CheckerListener implements MouseListener{
 	private void clearSelectionBorders() {
 		int currentIndex = 8 * this.currentSquareY + this.currentSquareX;
 		int followUpIndex = 8 * this.followUpSquareY + this.followUpSquareX;
+		this.clearBorderAt(currentIndex);
+		this.clearBorderAt(followUpIndex);
+	}
+	
+	//clears border at a given index if it is valid
+	private void clearBorderAt(int index) {
 		
-		resetBorderAt(currentIndex);
-		
-		//check that it is a valid tile to clear -- this can be called when followup is empty
-		if (followUpIndex != 8 * CheckerListener.DUMMY_COORDINATE + CheckerListener.DUMMY_COORDINATE) {
-			resetBorderAt(followUpIndex);
+		if (index != 8 * CheckerListener.DUMMY_COORDINATE + CheckerListener.DUMMY_COORDINATE) {
+			Location checker = masterPanel.getLocationAtIndex(index);
+			
+			if (checker.getTileColor().equals("R")) {
+				this.colorBorderAt(index, Color.RED);
+			} else if (checker.getTileColor().equals("B")) {
+				this.colorBorderAt(index, Color.BLACK);
+			} else {
+				this.colorBorderAt(index, CheckerListener.ERROR_COLOR);
+			}
 		}
 	}
 	
-	//resets border at a given index
-	private void resetBorderAt(int index) {
-		Location checker = masterPanel.getLocationAtIndex(index);
+	//color border of panel at given index the given color
+	private void colorBorderAt(int index, Color borderColor) {
 		JPanel checkerPanel = masterPanel.getTileAtIndex(index);
-		
-		if (checker.getTileColor().equals("R")) {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.RED, CheckerListener.BORDER_THICKNESS));
-		} else if (checker.getTileColor().equals("B")) {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, CheckerListener.BORDER_THICKNESS));
-		} else {
-			checkerPanel.setBorder(BorderFactory.createLineBorder(CheckerListener.ERROR_COLOR, CheckerListener.BORDER_THICKNESS));
-		}
+		checkerPanel.setBorder(BorderFactory.createLineBorder(borderColor, CheckerListener.BORDER_THICKNESS));
 	}
 	
 	@Override

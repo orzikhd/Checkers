@@ -126,6 +126,32 @@ public class CheckersModelTest {
 		//team 1 piece new location would be 5, 4 so 4*8 + 5 = 37
 		assertTrue(newModel.checkValidMove(preJump.get(19), preJump.get(37)));
 	}
+
+	@Test
+	public void validateMoveAdjacent() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		List<Location> startState = newModel.getBoardState();
+		//move from (1,2) to (2,3)
+		//2*8 + 1 = 17
+		//3*8 + 2 = 26
+		assertTrue(newModel.checkValidMove(startState.get(17), startState.get(26)));
+		newModel.movePiece(startState.get(17), startState.get(26));
+		newModel.switchPlayer();
+		//move from (2,5) to (1,4)
+		//5*8 + 2 = 42
+		//4*8 + 1 = 33
+		List<Location> secondState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(secondState.get(42), secondState.get(33)));
+		newModel.movePiece(secondState.get(42), secondState.get(33));
+		newModel.switchPlayer();
+		//move from (2,3) to (3,4)
+		//3*8 + 2 = 26
+		//4*8 + 3 = 35
+		List<Location> thirdState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(thirdState.get(26), thirdState.get(35)));
+		newModel.movePiece(thirdState.get(26), thirdState.get(35));
+	}
 	
 	@Test
 	public void JumpOnceTest() {

@@ -16,7 +16,9 @@ public class CheckersModel {
 	private Set<CheckerPiece> p1Pieces;
 	private Set<CheckerPiece> p2Pieces;
 	private int currentPlayer;
-	private static final int LENGTH_CHECKERS_BOARD = 8;
+	public static final int LENGTH_CHECKERS_BOARD = 8;
+	public static final int PLAYER1 = BiColorPiece.TEAM1;
+	public static final int PLAYER2 = BiColorPiece.TEAM2;
 	
 	/**
 	 * Models a Checkers Board of given length
@@ -87,10 +89,10 @@ public class CheckersModel {
 	 * Switches the current player in the game
 	 */
 	public void switchPlayer() {
-		if (this.currentPlayer == BiColorPiece.TEAM1) {
-			this.currentPlayer = BiColorPiece.TEAM2;
+		if (this.currentPlayer == CheckersModel.PLAYER1) {
+			this.currentPlayer = CheckersModel.PLAYER2;
 		} else {
-			this.currentPlayer = BiColorPiece.TEAM1;
+			this.currentPlayer = CheckersModel.PLAYER1;
 		}
 	}
 	
@@ -135,7 +137,7 @@ public class CheckersModel {
 		
 		CheckerPiece curr;
 		
-		this.currentPlayer = BiColorPiece.TEAM1;
+		this.currentPlayer = CheckersModel.PLAYER1;
 		
 		//place player1 pieces on top
 		for (int i = 0; i < 3; i++) {
@@ -226,17 +228,25 @@ public class CheckersModel {
 		int down = frY + 1;
 		
 		List<CheckerPiece> surroundingPieces = this.getSurroundingPieces(moveFrom);
+		List<CheckerPiece> surroundingJumpPieces = this.getSurroundingJumpPieces(moveFrom);
 		
 		CheckerPiece downLeft = surroundingPieces.get(0);
 		CheckerPiece downRight = surroundingPieces.get(1);
 		CheckerPiece upLeft = surroundingPieces.get(2);
 		CheckerPiece upRight = surroundingPieces.get(3);
+		CheckerPiece farDownLeft = surroundingJumpPieces.get(0);
+		CheckerPiece farDownRight = surroundingJumpPieces.get(1);
+		CheckerPiece farUpLeft = surroundingJumpPieces.get(2);
+		CheckerPiece farUpRight = surroundingJumpPieces.get(3);
+		
+		//at this point we know the jumpto spot is empty, the from spot is a piece, and someone is playing
 		
 		//now finally check if the move/jump is valid
-		if (this.currentPlayer == BiColorPiece.TEAM1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
+		if (this.currentPlayer == CheckersModel.PLAYER1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
 			
-			//jumping an enemy is available and must be done
-			if ((downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 || downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2)
+			//jumping an enemy is available and must be done, but the moveTo is not a jump
+			//jump available if the jumpto spot is empty and the jump over spot has an enemy piece in it
+			if (((downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 && farDownLeft == null) || (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2 && farDownRight == null))
 					&& (toX == left && toY == down || toX == right && toY == down)) {
 				return false;
 			}
@@ -265,10 +275,11 @@ public class CheckersModel {
 			}		
 		}
 		
-		if (this.currentPlayer == BiColorPiece.TEAM2 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
+		if (this.currentPlayer == CheckersModel.PLAYER2 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
 			
-			//jumping an enemy is available and must be done
-			if ((upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 || upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1)
+			//jumping an enemy is available and must be done, but the moveTo is not a jump
+			//jump available if the jumpto spot is empty and the jump over spot has an enemy piece in it
+			if (((upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 && farUpLeft == null) || (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1 && farUpRight == null))
 					&& (toX == left && toY == up || toX == right && toY == up)) {
 				return false;
 			}

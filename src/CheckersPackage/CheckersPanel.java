@@ -81,6 +81,10 @@ public class CheckersPanel extends JPanel {
 		}
 	}
 	
+	public String getStatusMessage() {
+		return this.listener.getStatusMessage();
+	}
+	
 	//draws all locations from the masterModel
 	private void drawState() {
 		
@@ -127,6 +131,12 @@ public class CheckersPanel extends JPanel {
 		this.needsRedraw = true;
 		this.listener.resetAllTracking();
 		this.repaint();
+	}
+	
+	//switches the current player
+	//package-private
+	void switchPlayer() {
+		this.masterModel.switchPlayer();
 	}
 	
 	//Requests the model to execute a move

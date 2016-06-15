@@ -2,6 +2,7 @@ package CheckersPackage;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -23,6 +24,8 @@ public class MenuPanel extends JPanel implements ActionListener{
 	private CheckersModel masterModel;
 	private CheckersPanel masterPanel;
 	private JLabel message;
+	private JLabel currentPlayer;
+	private JLabel debug;
 	
 	public MenuPanel(CheckersModel masterModel, CheckersPanel masterPanel) {
 		super();
@@ -30,19 +33,35 @@ public class MenuPanel extends JPanel implements ActionListener{
 		this.masterModel = masterModel;
 		this.masterPanel = masterPanel;
 		this.message = new JLabel();
+		this.currentPlayer = new JLabel();
+		this.debug = new JLabel();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		Font titleFont = new Font("Verdana", Font.BOLD, 40);
 		Font messageFont = new Font("Verdana", Font.BOLD, 20);
 		
+		JPanel titleWrapper = new JPanel();
+		titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.LINE_AXIS));
+		titleWrapper.setAlignmentX(Component.CENTER_ALIGNMENT);
+		titleWrapper.setOpaque(false);
+		
 		JLabel titleLabel = new JLabel();
 		titleLabel.setFont(titleFont);
 		titleLabel.setText("Checkers!");
-		titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);		
+		
+		titleWrapper.add(Box.createRigidArea(new Dimension(100, 0)));
+		titleWrapper.add(titleLabel);
+		titleWrapper.add(Box.createRigidArea(new Dimension(100, 0)));
 		
 		this.message.setFont(messageFont);
-		this.message.setText("Welcome to Checkers!");
+		//this.message.setText("Welcome to Checkers!");
 		this.message.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		this.currentPlayer.setFont(messageFont);
+		this.currentPlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		this.debug.setFont(messageFont);
+		this.debug.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		JPanel buttonWrapper = new JPanel();
 		buttonWrapper.setLayout(new BoxLayout(buttonWrapper, BoxLayout.LINE_AXIS));
@@ -58,8 +77,10 @@ public class MenuPanel extends JPanel implements ActionListener{
 		buttonWrapper.add(resetBoard);
 		
 		this.add(Box.createVerticalStrut(10));
-		this.add(titleLabel);
+		this.add(titleWrapper);
+		this.add(currentPlayer);
 		this.add(message);
+		this.add(debug);
 		this.add(Box.createVerticalStrut(300));
 		this.add(buttonWrapper);	
 		this.add(Box.createVerticalStrut(10));
@@ -68,8 +89,17 @@ public class MenuPanel extends JPanel implements ActionListener{
 	@Override 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		this.message.setText("curr size: " + this.getWidth() + ", " + this.getHeight());
-		//this.message.setText("curr parent size: " + this.getParent().getWidth() + ", " + this.getParent().getHeight());
+		//this.message.setText("curr size: " + this.getWidth() + ", " + this.getHeight());
+		//this.debug.setText("curr parent size: " + this.getParent().getWidth() + ", " + this.getParent().getHeight());
+		this.message.setText(this.masterPanel.getStatusMessage());
+		
+		if (this.masterModel.getCurrentPlayer() == CheckersModel.PLAYER1) {
+			this.currentPlayer.setText("Player 1's turn");
+		} else if (this.masterModel.getCurrentPlayer() == CheckersModel.PLAYER2) {
+			this.currentPlayer.setText("Player 2's turn");
+		} else {
+			this.currentPlayer.setText("Error: Invalid Player");
+		}
 	}
 
 	@Override

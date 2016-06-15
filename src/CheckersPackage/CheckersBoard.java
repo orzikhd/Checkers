@@ -67,7 +67,7 @@ public class CheckersBoard implements GameBoard {
 		if (x < 0 || x >= this.getLength() || y < 0 || y >= this.getLength()) {
 			throw new IllegalArgumentException("Coordinate out of bounds");
 		}
-		
+				
 		//since arrays are accessed by row and then col, it should be y first and then x
 		return this.tiles[y][x].getOccupyingPiece();
 	}
