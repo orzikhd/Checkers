@@ -111,6 +111,15 @@ public class CheckersModel {
 	 * @effects if a piece was present at this location, it has been removed
 	 */
 	public void removePiece(Location removeFrom) {
+		GamePiece removed = this.board.getPieceAtLocation(removeFrom.getX(), removeFrom.getY());
+		if (removeFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
+			this.p1Pieces.remove(removed);
+		} else if (removeFrom.getPieceTeamColor() == BiColorPiece.TEAM2){
+			this.p2Pieces.remove(removed);
+		} else {
+			System.out.println("sad trombone");
+		}
+
 		this.board.putPieceAtLocation(removeFrom.getX(), removeFrom.getY(), null);
 	}
 	
@@ -160,7 +169,6 @@ public class CheckersModel {
 				}
 			}
 		}
-		
 		//Acknowledgment that I am violating DRY
 	}
 	
@@ -173,8 +181,14 @@ public class CheckersModel {
 	 */
 	public void movePiece(Location moveFrom, Location moveTo) {
 		if (checkValidMove(moveFrom, moveTo)) {
+			CheckerPiece replacementPiece = new CheckerPiece(moveFrom.getPieceTeamColor());
 			this.removePiece(moveFrom);
-			this.board.putPieceAtLocation(moveTo.getX(), moveTo.getY(), new CheckerPiece(moveFrom.getPieceTeamColor()));
+			this.board.putPieceAtLocation(moveTo.getX(), moveTo.getY(), replacementPiece);
+			if (replacementPiece.getTeamColor() == BiColorPiece.TEAM1) {
+				this.p1Pieces.add(replacementPiece);
+			} else {
+				this.p2Pieces.add(replacementPiece);
+			}
 			
 			int frX = moveFrom.getX();
 			int frY = moveFrom.getY();
@@ -183,15 +197,18 @@ public class CheckersModel {
 			
 			//remove piece if a jump occurred
 			if (toX == frX - 2 && toY == frY + 2) {
-				this.removePiece(new Location(frX - 1, frY + 1, Location.NULL_TEAM_COLOR, false, "W"));
+				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX - 1, frY + 1);
+				this.removePiece(new Location(frX - 1, frY + 1, piece.getTeamColor(), false, "W"));
 			} else if (toX == frX + 2 && toY == frY + 2) {
-				this.removePiece(new Location(frX + 1, frY + 1, Location.NULL_TEAM_COLOR, false, "W"));
+				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX + 1, frY + 1);
+				this.removePiece(new Location(frX + 1, frY + 1, piece.getTeamColor(), false, "W"));
 			} else if (toX == frX - 2 && toY == frY - 2) {
-				this.removePiece(new Location(frX - 1, frY - 1, Location.NULL_TEAM_COLOR, false, "W"));
+				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX - 1, frY - 1);
+				this.removePiece(new Location(frX - 1, frY - 1, piece.getTeamColor(), false, "W"));
 			} else if (toX == frX + 2 && toY == frY - 2) {
-				this.removePiece(new Location(frX + 1, frY - 1, Location.NULL_TEAM_COLOR, false, "W"));
+				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX + 1, frY - 1);
+				this.removePiece(new Location(frX + 1, frY - 1, piece.getTeamColor(), false, "W"));
 			}
-			
 		}
 	}
 	

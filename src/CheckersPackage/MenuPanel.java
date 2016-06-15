@@ -105,7 +105,6 @@ public class MenuPanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
-		System.out.println(command);
 		if (command.equals("reset")) {
 			this.masterModel.emptyBoard();
 			this.masterModel.setUpBoard();

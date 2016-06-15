@@ -66,12 +66,8 @@ public class CheckerListener implements MouseListener{
 		
 		int squareWidth = this.masterPanel.getBoardWidth() / 8;
 				
-		//System.out.println(e.getX() / squareWidth + ", " +  e.getY() / squareWidth);
-		
 		int justPressedX = e.getX() / squareWidth;
 		int justPressedY = e.getY() / squareWidth;
-		
-		System.out.println(justPressedX + ", " + justPressedY); 
 		
 		int justPressedIndex = 8 * justPressedY + justPressedX;
 		int currentIndex = 8 * this.currentSquareY + this.currentSquareX;
@@ -154,7 +150,6 @@ public class CheckerListener implements MouseListener{
 		}
 		
 		this.masterPanel.repaint();
-		System.out.println(statusMessage);
 	}
 	
 	//set the border on the current square based on validitity etc
