@@ -63,4 +63,19 @@ public class Location {
 	public String getTileColor() {
 		return this.tileColor;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof Location)) {
+			return false;
+		}
+		
+		Location o = (Location) other;
+		if (this.X == o.X && this.Y == o.Y && this.pieceTeamColor == o.pieceTeamColor 
+				&& this.isKing == o.isKing && this.tileColor.equals(o.tileColor)) {
+			return true;
+		}
+		
+		return false;
+	}
 }

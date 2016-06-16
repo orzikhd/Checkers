@@ -32,6 +32,19 @@ public class CheckersModelTest {
 	}
 	
 	@Test
+	public void countPiecesPostMoveTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		List<Location> startState = newModel.getBoardState();
+		//move from (1,2) to (2,3)
+		//2*8 + 1 = 17
+		//3*8 + 2 = 26
+		newModel.movePiece(startState.get(17), startState.get(26));
+		assertEquals(newModel.countPlayer1(), 12);
+		assertEquals(newModel.countPlayer2(), 12);
+	}
+	
+	@Test
 	public void SetUpBoardTest() {
 		CheckersModel newModel = new CheckersModel();
 		newModel.setUpBoard();
@@ -112,23 +125,29 @@ public class CheckersModelTest {
 		CheckersModel newModel = new CheckersModel();
 		newModel.setUpBoard();
 		newModel.switchPlayer();
-		Location startTeam2Spot = new Location(2, 5, BiColorPiece.TEAM2, false, GameTile.TILE_BLACK);
-		Location moveUpRight = new Location(3, 4, Location.NULL_TEAM_COLOR, false, GameTile.TILE_BLACK);
-		Location moveUpRightPostMove = new Location(3, 4, BiColorPiece.TEAM2, false, GameTile.TILE_BLACK);
-		Location moveUpRight2 = new Location(4, 3, Location.NULL_TEAM_COLOR, false, GameTile.TILE_BLACK);
-		newModel.movePiece(startTeam2Spot, moveUpRight);
-		newModel.movePiece(moveUpRightPostMove, moveUpRight2);
+		//2,5 -> 5*8 + 2 = 42
+		//3,4 -> 4*8 + 3 = 35
+		Location start = newModel.getBoardState().get(42);
+		Location moveUpRight = newModel.getBoardState().get(35);
+		assertTrue(newModel.checkValidMove(start, moveUpRight));
+		newModel.movePiece(start, moveUpRight);
+		
+		//4,3 -> 3*8 + 4 = 28
+		Location postMove = newModel.getBoardState().get(35);
+		Location moveUpRight2 = newModel.getBoardState().get(28);
+		assertTrue(newModel.checkValidMove(postMove, moveUpRight2));
+		newModel.movePiece(postMove, moveUpRight2);
 		
 		newModel.switchPlayer();
-		List<Location> preJump = newModel.getBoardState();
-		//team 1 piece at 3, 2 so 2*8 + 3 = 19
-		//team 2 piece at 4, 3 so 3*8 + 4 = 28
-		//team 1 piece new location would be 5, 4 so 4*8 + 5 = 37
-		assertTrue(newModel.checkValidMove(preJump.get(19), preJump.get(37)));
+		//3,2 -> 2*8 + 3 = 19
+		//5,4 -> 4*8 + 5 = 37
+		Location player1Piece = newModel.getBoardState().get(19);
+		Location jumpTo = newModel.getBoardState().get(37);
+		assertTrue(newModel.checkValidMove(player1Piece, jumpTo));
 	}
 
 	@Test
-	public void validateMoveAdjacent() {
+	public void validateMoveAdjacentTest() {
 		CheckersModel newModel = new CheckersModel();
 		newModel.setUpBoard();
 		List<Location> startState = newModel.getBoardState();
@@ -151,6 +170,35 @@ public class CheckersModelTest {
 		List<Location> thirdState = newModel.getBoardState();
 		assertTrue(newModel.checkValidMove(thirdState.get(26), thirdState.get(35)));
 		newModel.movePiece(thirdState.get(26), thirdState.get(35));
+	}
+	
+	@Test
+	public void validateJumpAdjacentTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		
+		//5,2 -> 2*8 + 5 = 21
+		//6,3 -> 3*8 + 6 = 30
+		//4,5 -> 5*8 + 4 = 44
+		//5,4 -> 4*8 + 5 = 37
+		//3,2 -> 2*8 + 3 = 19
+		//4,3 -> 3*8 + 4 = 28
+		List<Location> startState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(startState.get(21), startState.get(30)));
+		newModel.movePiece(startState.get(21), startState.get(30));
+		newModel.switchPlayer();
+		List<Location> secondState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(secondState.get(44), secondState.get(37)));
+		newModel.movePiece(secondState.get(44), secondState.get(37));
+		newModel.switchPlayer();
+		List<Location> thirdState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(thirdState.get(19), thirdState.get(28)));
+		newModel.movePiece(thirdState.get(19), thirdState.get(28));
+		newModel.switchPlayer();
+		List<Location> testState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(testState.get(37), testState.get(19)));
+		
+		
 	}
 	
 	@Test
@@ -183,7 +231,7 @@ public class CheckersModelTest {
 		CheckersModel newModel = new CheckersModel();
 		newModel.setUpBoard();
 		assertTrue(newModel.getBoardState().get(1).getPieceTeamColor() != Location.NULL_TEAM_COLOR);
-		Location removeTestLoc = new Location(1, 0, 0, false, null);
+		Location removeTestLoc = newModel.getBoardState().get(1);
 		newModel.removePiece(removeTestLoc);
 		assertEquals(newModel.getBoardState().get(1).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
 		

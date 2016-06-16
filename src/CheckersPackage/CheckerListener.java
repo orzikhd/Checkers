@@ -68,7 +68,7 @@ public class CheckerListener implements MouseListener{
 				
 		int justPressedX = e.getX() / squareWidth;
 		int justPressedY = e.getY() / squareWidth;
-		
+		System.out.println(justPressedX + ", " + justPressedY);
 		int justPressedIndex = 8 * justPressedY + justPressedX;
 		int currentIndex = 8 * this.currentSquareY + this.currentSquareX;
 		int followUpIndex = 8 * this.followUpSquareY + this.followUpSquareX;

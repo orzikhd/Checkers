@@ -243,9 +243,68 @@ public class CheckersModel {
 		int right = frX + 1;
 		int up = frY - 1;
 		int down = frY + 1;
+				
+		//at this point we know the jumpto spot is empty, the from spot is a piece, and someone is playing
+		int plsrestartdebug = 0;
+		//if a jump is available, this should be a jump, otherwise its an invalid move
+		List<Location> jumps = this.jumpsAvailable(frX, frY);
+		if (!jumps.isEmpty()) {
+			if (jumps.contains(this.getLocationAtCoordinates(toX, toY))) {
+				return true;
+			}	
+			
+			return false;
+		}
+
+		if (this.currentPlayer == CheckersModel.PLAYER1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
+
+			if (toX == left && toY == down	|| toX == right && toY == down){
+				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+				//we also now know that no jump is available
+				return true;
+			} else if (moveFrom.getIsKing()) {
+				//kings can move backwards
+				if (toX == left && toY == up || toX == right && toY == up){
+					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+					return true;
+				} 
+			}		
+		}
 		
-		List<CheckerPiece> surroundingPieces = this.getSurroundingPieces(moveFrom);
-		List<CheckerPiece> surroundingJumpPieces = this.getSurroundingJumpPieces(moveFrom);
+		if (this.currentPlayer == CheckersModel.PLAYER2 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
+			
+			if (toX == left && toY == up || toX == right && toY == up){
+				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+				//we also now know that no jump is available
+				return true;
+			} else if (moveFrom.getIsKing()) {
+				//kings can move backwards
+				if (toX == left && toY == down || toX == right && toY == down){
+					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
+					return true;
+				} 
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Return a list of all jumps available for the piece at the given coordinates
+	 * @param frX X component of start location
+	 * @param frY Y component of start location
+	 * @return List of Locations that can be jumped to from the given coordinates.
+	 * 	Empty if no jumps available.
+	 */
+	public List<Location> jumpsAvailable(int frX, int frY) {
+		CheckerPiece startPiece = (CheckerPiece) this.board.getPieceAtLocation(frX, frY);
+		List<Location> result = new ArrayList<>();
+		if (startPiece == null) {
+			return result;
+		}
+		
+		List<CheckerPiece> surroundingPieces = this.getSurroundingPieces(frX, frY);
+		List<CheckerPiece> surroundingJumpPieces = this.getSurroundingJumpPieces(frX, frY);
 		
 		CheckerPiece downLeft = surroundingPieces.get(0);
 		CheckerPiece downRight = surroundingPieces.get(1);
@@ -256,75 +315,68 @@ public class CheckersModel {
 		CheckerPiece farUpLeft = surroundingJumpPieces.get(2);
 		CheckerPiece farUpRight = surroundingJumpPieces.get(3);
 		
-		//at this point we know the jumpto spot is empty, the from spot is a piece, and someone is playing
-		
-		//now finally check if the move/jump is valid
-		if (this.currentPlayer == CheckersModel.PLAYER1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
-			
-			//jumping an enemy is available and must be done, but the moveTo is not a jump
-			//jump available if the jumpto spot is empty and the jump over spot has an enemy piece in it
-			if (((downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 && farDownLeft == null) || (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2 && farDownRight == null))
-					&& (toX == left && toY == down || toX == right && toY == down)) {
-				return false;
+		Location toAdd;
+		if (startPiece.getTeamColor() == CheckerPiece.TEAM1 && this.getCurrentPlayer() == CheckersModel.PLAYER1) {			
+			if (downLeft != null && downLeft.getTeamColor() == CheckerPiece.TEAM2
+					&& farDownLeft == null) {
+				//add farDownLeft to result
+				toAdd = this.getLocationAtCoordinates(frX - 2, frY + 2);
+				result.add(toAdd);
+			} else if (downRight != null && downRight.getTeamColor() == CheckerPiece.TEAM2
+					&& farDownRight == null) {
+				//add farDownRight to result
+				toAdd = this.getLocationAtCoordinates(frX + 2, frY + 2);
+				result.add(toAdd);
+			} else {
+				if (startPiece.isKing()) {
+					if (upLeft != null && upLeft.getTeamColor() == CheckerPiece.TEAM2
+							&& farUpLeft == null) {
+						//add farUpLeft to result
+						toAdd = this.getLocationAtCoordinates(frX - 2, frY - 2);
+						result.add(toAdd);
+					} else if (upRight != null && upRight.getTeamColor() == CheckerPiece.TEAM2
+							&& farUpRight == null) {
+						//add farUpRight to result
+						toAdd = this.getLocationAtCoordinates(frX + 2, frY - 2);
+						result.add(toAdd);
+					}					
+				}
 			}
-			
-			//if a piece exists then jump it
-			if (downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY + 2) {
-				return true;
-			} else if (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY + 2) {
-				return true;
-			} else if (toX == left && toY == down
-					|| toX == right && toY == down){
-				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
-				//we also now know that no jump is available
-				return true;
-			} else if (moveFrom.getIsKing()) {
-				//kings can move backwards
-				if (upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM2 && toX == frX - 2 && toY == frY - 2) {
-					return true;
-				} else if (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM2 && toX == frX + 2 && toY == frY - 2) {
-					return true;
-				} else if (toX == left && toY == up
-						|| toX == right && toY == up){
-					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
-					return true;
-				} 
-			}		
+		} else if (startPiece.getTeamColor() == CheckerPiece.TEAM2 && this.getCurrentPlayer() == CheckersModel.PLAYER2) {
+			if (upLeft != null && upLeft.getTeamColor() == CheckerPiece.TEAM1
+					&& farUpLeft == null) {
+				//add farUpLeft to result
+				toAdd = this.getLocationAtCoordinates(frX - 2, frY - 2);
+				result.add(toAdd);
+			} else if (upRight != null && upRight.getTeamColor() == CheckerPiece.TEAM1
+					&& farUpRight == null) {
+				//add farUpRight to result
+				toAdd = this.getLocationAtCoordinates(frX + 2, frY - 2);
+				result.add(toAdd);
+			} else {
+				if (startPiece.isKing()) {
+					if (downLeft != null && downLeft.getTeamColor() == CheckerPiece.TEAM1
+							&& farDownLeft == null) {
+						//add farDownLeft to result
+						toAdd = this.getLocationAtCoordinates(frX - 2, frY + 2);
+						result.add(toAdd);
+					} else if (downRight != null && downRight.getTeamColor() == CheckerPiece.TEAM1
+							&& farDownRight == null) {
+						//add farDownRight to result
+						toAdd = this.getLocationAtCoordinates(frX + 2, frY + 2);
+						result.add(toAdd);
+					}					
+				}
+			}			
 		}
 		
-		if (this.currentPlayer == CheckersModel.PLAYER2 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
-			
-			//jumping an enemy is available and must be done, but the moveTo is not a jump
-			//jump available if the jumpto spot is empty and the jump over spot has an enemy piece in it
-			if (((upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 && farUpLeft == null) || (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1 && farUpRight == null))
-					&& (toX == left && toY == up || toX == right && toY == up)) {
-				return false;
-			}
-			
-			//if a piece exists then jump it, otherwise just walk
-			if (upLeft != null && upLeft.getTeamColor() == BiColorPiece.TEAM1 && toX == frX - 2 && toY == frY - 2) {
-				return true;
-			} else if (upRight != null && upRight.getTeamColor() == BiColorPiece.TEAM1 && toX == frX + 2 && toY == frY - 2) {
-				return true;
-			} else if (toX == left && toY == up
-					|| toX == right && toY == up){
-				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
-				return true;
-			} else if (moveFrom.getIsKing()) {
-				//kings can move backwards
-				if (downLeft != null && downLeft.getTeamColor() == BiColorPiece.TEAM1 && toX == frX - 2 && toY == frY + 2) {
-					return true;
-				} else if (downRight != null && downRight.getTeamColor() == BiColorPiece.TEAM1 && toX == frX + 2 && toY == frY + 2) {
-					return true;
-				} else if (toX == left && toY == down
-						|| toX == right && toY == down){
-					//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
-					return true;
-				} 
-			}
-		}
+		return result;
+	}
+	
+	private Location getLocationAtCoordinates(int frX, int frY) {
+		List<Location> currentState = this.getBoardState();
 		
-		return false;
+		return currentState.get(frY*8 + frX);
 	}
 	
 	/**
@@ -338,8 +390,8 @@ public class CheckersModel {
 	public boolean checkValidSelection(Location selection) {
 		
 		List<Location> surroundingLocations = new ArrayList<>();
-		List<CheckerPiece> surroundingPieces = this.getSurroundingPieces(selection);
-		List<CheckerPiece> surroundingJumpPieces = this.getSurroundingJumpPieces(selection);
+		List<CheckerPiece> surroundingPieces = this.getSurroundingPieces(selection.getX(), selection.getY());
+		List<CheckerPiece> surroundingJumpPieces = this.getSurroundingJumpPieces(selection.getX(), selection.getY());
 		
 		int frX = selection.getX();
 		int frY = selection.getY();
@@ -445,10 +497,7 @@ public class CheckersModel {
 	
 	//in order of downleft, downright, upleft, upright
 	//null if no piece there
-	private List<CheckerPiece> getSurroundingPieces(Location center) {
-		
-		int frX = center.getX();
-		int frY = center.getY();
+	private List<CheckerPiece> getSurroundingPieces(int frX, int frY) {
 		
 		CheckerPiece downLeft;
 		CheckerPiece downRight;
@@ -491,11 +540,8 @@ public class CheckersModel {
 	
 	//in order of far downleft, far downright, far upleft, far upright
 	//null if no piece there
-	private List<CheckerPiece> getSurroundingJumpPieces(Location center) {
-		
-		int frX = center.getX();
-		int frY = center.getY();
-		
+	private List<CheckerPiece> getSurroundingJumpPieces(int frX, int frY) {
+
 		CheckerPiece farDownLeft;
 		CheckerPiece farDownRight;
 		CheckerPiece farUpLeft;
