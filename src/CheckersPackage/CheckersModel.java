@@ -329,24 +329,28 @@ public class CheckersModel {
 		Location toAdd;
 		if (startPiece.getTeamColor() == CheckerPiece.TEAM1 && this.getCurrentPlayer() == CheckersModel.PLAYER1) {			
 			if (downLeft != null && downLeft.getTeamColor() == CheckerPiece.TEAM2
-					&& farDownLeft == null) {
+					&& farDownLeft == null
+					&& validCoordinate(frX - 2) && validCoordinate(frY + 2)) {
 				//add farDownLeft to result
 				toAdd = this.getLocationAtCoordinates(frX - 2, frY + 2);
 				result.add(toAdd);
 			} else if (downRight != null && downRight.getTeamColor() == CheckerPiece.TEAM2
-					&& farDownRight == null) {
+					&& farDownRight == null
+					&& validCoordinate(frX + 2) && validCoordinate(frY + 2)) {
 				//add farDownRight to result
 				toAdd = this.getLocationAtCoordinates(frX + 2, frY + 2);
 				result.add(toAdd);
 			} else {
 				if (startPiece.isKing()) {
 					if (upLeft != null && upLeft.getTeamColor() == CheckerPiece.TEAM2
-							&& farUpLeft == null) {
+							&& farUpLeft == null
+							&& validCoordinate(frX - 2) && validCoordinate(frY - 2)) {
 						//add farUpLeft to result
 						toAdd = this.getLocationAtCoordinates(frX - 2, frY - 2);
 						result.add(toAdd);
 					} else if (upRight != null && upRight.getTeamColor() == CheckerPiece.TEAM2
-							&& farUpRight == null) {
+							&& farUpRight == null
+							&& validCoordinate(frX + 2) && validCoordinate(frY - 2)) {
 						//add farUpRight to result
 						toAdd = this.getLocationAtCoordinates(frX + 2, frY - 2);
 						result.add(toAdd);
@@ -355,24 +359,28 @@ public class CheckersModel {
 			}
 		} else if (startPiece.getTeamColor() == CheckerPiece.TEAM2 && this.getCurrentPlayer() == CheckersModel.PLAYER2) {
 			if (upLeft != null && upLeft.getTeamColor() == CheckerPiece.TEAM1
-					&& farUpLeft == null) {
+					&& farUpLeft == null
+					&& validCoordinate(frX - 2) && validCoordinate(frY - 2)) {
 				//add farUpLeft to result
 				toAdd = this.getLocationAtCoordinates(frX - 2, frY - 2);
 				result.add(toAdd);
 			} else if (upRight != null && upRight.getTeamColor() == CheckerPiece.TEAM1
-					&& farUpRight == null) {
+					&& farUpRight == null
+					&& validCoordinate(frX + 2) && validCoordinate(frY - 2)) {
 				//add farUpRight to result
 				toAdd = this.getLocationAtCoordinates(frX + 2, frY - 2);
 				result.add(toAdd);
 			} else {
 				if (startPiece.isKing()) {
 					if (downLeft != null && downLeft.getTeamColor() == CheckerPiece.TEAM1
-							&& farDownLeft == null) {
+							&& farDownLeft == null
+							&& validCoordinate(frX - 2) && validCoordinate(frY + 2)) {
 						//add farDownLeft to result
 						toAdd = this.getLocationAtCoordinates(frX - 2, frY + 2);
 						result.add(toAdd);
 					} else if (downRight != null && downRight.getTeamColor() == CheckerPiece.TEAM1
-							&& farDownRight == null) {
+							&& farDownRight == null
+							&& validCoordinate(frX + 2) && validCoordinate(frY + 2)) {
 						//add farDownRight to result
 						toAdd = this.getLocationAtCoordinates(frX + 2, frY + 2);
 						result.add(toAdd);
@@ -416,9 +424,9 @@ public class CheckersModel {
 		int farDown = frY + 2;
 		
 		//valid to move left
-		if (left > 0) {
+		if (validCoordinate(left)) {
 			//valid to move up
-			if (up > 0) {
+			if (validCoordinate(up)) {
 				if (surroundingPieces.get(2) != null) {
 					surroundingLocations.add(new Location(left, up, surroundingPieces.get(2).getTeamColor(), surroundingPieces.get(2).isKing(), GameTile.TILE_WHITE));
 				} else {
@@ -427,7 +435,7 @@ public class CheckersModel {
 				
 			}
 			//valid to move down
-			if (down < CheckersModel.LENGTH_CHECKERS_BOARD) {
+			if (validCoordinate(down)) {
 				if (surroundingPieces.get(0) != null) {
 					surroundingLocations.add(new Location(left, down, surroundingPieces.get(0).getTeamColor(), surroundingPieces.get(0).isKing(), GameTile.TILE_WHITE));
 				} else {
@@ -437,9 +445,9 @@ public class CheckersModel {
 		}
 		
 		//valid to move right
-		if (right < CheckersModel.LENGTH_CHECKERS_BOARD) {
+		if (validCoordinate(right)) {
 			//valid to move up
-			if (up > 0) {
+			if (validCoordinate(up)) {
 				if (surroundingPieces.get(3) != null) {
 					surroundingLocations.add(new Location(right, up, surroundingPieces.get(3).getTeamColor(), surroundingPieces.get(3).isKing(), GameTile.TILE_WHITE));
 				} else {
@@ -447,7 +455,7 @@ public class CheckersModel {
 				}
 			}
 			//valid to move down
-			if (down < CheckersModel.LENGTH_CHECKERS_BOARD) {
+			if (validCoordinate(down)) {
 				if (surroundingPieces.get(1) != null) {
 					surroundingLocations.add(new Location(right, down, surroundingPieces.get(1).getTeamColor(), surroundingPieces.get(1).isKing(), GameTile.TILE_WHITE));
 				} else {
@@ -457,9 +465,9 @@ public class CheckersModel {
 		}
 		
 		//valid to move far left
-		if (farLeft > 0) {
+		if (validCoordinate(farLeft)) {
 			//valid to move far up
-			if (farUp > 0) {
+			if (validCoordinate(farUp)) {
 				if (surroundingJumpPieces.get(2) != null) {
 					surroundingLocations.add(new Location(farLeft, farUp, surroundingJumpPieces.get(2).getTeamColor(), surroundingJumpPieces.get(2).isKing(), GameTile.TILE_WHITE));
 				} else {
@@ -468,7 +476,7 @@ public class CheckersModel {
 				
 			}
 			//valid to move far down
-			if (farDown < CheckersModel.LENGTH_CHECKERS_BOARD) {
+			if (validCoordinate(farDown)) {
 				if (surroundingJumpPieces.get(0) != null) {
 					surroundingLocations.add(new Location(farLeft, farDown, surroundingJumpPieces.get(0).getTeamColor(), surroundingJumpPieces.get(0).isKing(), GameTile.TILE_WHITE));
 				} else {
@@ -478,9 +486,9 @@ public class CheckersModel {
 		}
 		
 		//valid to move right
-		if (farRight < CheckersModel.LENGTH_CHECKERS_BOARD) {
+		if (validCoordinate(farRight)) {
 			//valid to move up
-			if (farUp > 0) {
+			if (validCoordinate(farUp)) {
 				if (surroundingJumpPieces.get(3) != null) {
 					surroundingLocations.add(new Location(farRight, farUp, surroundingJumpPieces.get(3).getTeamColor(), surroundingJumpPieces.get(3).isKing(), GameTile.TILE_WHITE));
 				} else {
@@ -488,7 +496,7 @@ public class CheckersModel {
 				}
 			}
 			//valid to move down
-			if (farDown < CheckersModel.LENGTH_CHECKERS_BOARD) {
+			if (validCoordinate(farDown)) {
 				if (surroundingJumpPieces.get(1) != null) {
 					surroundingLocations.add(new Location(farRight, farDown, surroundingJumpPieces.get(1).getTeamColor(), surroundingJumpPieces.get(1).isKing(), GameTile.TILE_WHITE));
 				} else {
@@ -504,6 +512,10 @@ public class CheckersModel {
 		}
 		
 		return false;
+	}
+	
+	private boolean validCoordinate(int coordinate) {
+		return (coordinate >= 0 && coordinate < CheckersModel.LENGTH_CHECKERS_BOARD);
 	}
 	
 	//in order of downleft, downright, upleft, upright

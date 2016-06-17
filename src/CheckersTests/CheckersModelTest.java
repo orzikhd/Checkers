@@ -147,7 +147,7 @@ public class CheckersModelTest {
 	}
 
 	@Test
-	public void validateMoveAdjacentTest() {
+	public void validateMoveAdjacentEnemyTest() {
 		CheckersModel newModel = new CheckersModel();
 		newModel.setUpBoard();
 		List<Location> startState = newModel.getBoardState();
@@ -169,7 +169,48 @@ public class CheckersModelTest {
 		//4*8 + 3 = 35
 		List<Location> thirdState = newModel.getBoardState();
 		assertTrue(newModel.checkValidMove(thirdState.get(26), thirdState.get(35)));
+		assertTrue(newModel.checkValidSelection(thirdState.get(26)));
 		newModel.movePiece(thirdState.get(26), thirdState.get(35));
+	}
+	
+	@Test
+	public void validateMoveAdjacentEnemy2Test() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		//7,2 -> 2*8 + 7 = 23
+		//6,3 -> 3*8 + 6 = 30
+		//7,4 -> 4*8 + 7 = 39
+		//6,5 -> 5*8 + 6 = 46
+		//5,4 -> 4*8 + 5 = 37
+		List<Location> startState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(startState.get(23), startState.get(30)));
+		newModel.movePiece(startState.get(23), startState.get(30));
+		
+		List<Location> secondState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(secondState.get(30), secondState.get(39)));
+		newModel.movePiece(secondState.get(30), secondState.get(39));
+		
+		newModel.switchPlayer();
+		List<Location> testState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(testState.get(46), testState.get(37)));
+		newModel.movePiece(testState.get(46), testState.get(37));
+		
+	}
+	
+	@Test
+	public void validateMoveAdjacentFriendTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		//0,5 -> 5*8 + 0 = 40
+		//1,4 -> 4*8 + 1 = 33
+		//1,6 -> 6*8 + 1 = 49
+		newModel.switchPlayer();
+		List<Location> startState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(startState.get(40), startState.get(33)));
+		newModel.movePiece(startState.get(40), startState.get(33));
+		List<Location> testState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(testState.get(49), testState.get(40)));
+		assertTrue(newModel.checkValidSelection(testState.get(49)));
 	}
 	
 	@Test

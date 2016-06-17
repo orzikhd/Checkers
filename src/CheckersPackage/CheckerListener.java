@@ -109,16 +109,31 @@ public class CheckerListener implements MouseListener{
 			//situation: they pressed on the followUpSquare again
 			//if the move is actually valid-- execute it
 			if (this.masterPanel.validMove(currentIndex, followUpIndex)) {
+				
+				this.masterPanel.requestMove(currentIndex, followUpIndex);
+				
 				this.clearAllOtherBorders();
 				this.clearBorderAt(currentIndex);
 				
-				this.masterPanel.requestMove(currentIndex, followUpIndex);
-				this.masterPanel.switchPlayer();
-				this.currentSquareX = CheckerListener.DUMMY_COORDINATE;
-				this.currentSquareY = CheckerListener.DUMMY_COORDINATE;
+				//if can jump again (i.e. combo) then keep going
+				if (this.masterPanel.canJump(followUpIndex)) {
+					System.out.println("beep");
+					System.out.println(this.followUpSquareX);
+					System.out.println(justPressedX);
+					this.currentSquareX = this.followUpSquareX;
+					this.currentSquareY = this.followUpSquareY;		
+					this.setCurrentBorder();
+					this.statusMessage = CheckerListener.SELECT_FOLLOWUP_MESSAGE;
+				} else {
+					System.out.println("boop");
+					this.masterPanel.switchPlayer();
+					this.currentSquareX = CheckerListener.DUMMY_COORDINATE;
+					this.currentSquareY = CheckerListener.DUMMY_COORDINATE;
+					this.statusMessage = CheckerListener.RESET_MESSAGE;
+				}
+				
 				this.followUpSquareX = CheckerListener.DUMMY_COORDINATE;
 				this.followUpSquareY = CheckerListener.DUMMY_COORDINATE;
-				this.statusMessage = CheckerListener.RESET_MESSAGE;
 				
 			} else {
 				//followUp was invalid so clear it

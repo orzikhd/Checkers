@@ -174,9 +174,16 @@ public class CheckersPanel extends JPanel {
 	//return if this piece can be moved right now
 	//package-private
 	boolean validSelection(int index) {
-		
 		Location selection = this.masterModel.getBoardState().get(index);
 		return this.masterModel.checkValidSelection(selection);
+	}
+	
+	//return if the piece at the given index can jump
+	//package-private
+	boolean canJump(int index) {
+		Location selection = this.masterModel.getBoardState().get(index);
+		//if not empty, return true
+		return !(this.masterModel.jumpsAvailable(selection.getX(), selection.getY()).isEmpty());
 	}
 	
 	/**
