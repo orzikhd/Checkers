@@ -109,9 +109,11 @@ public class MenuPanel extends JPanel implements ActionListener{
 			this.masterModel.emptyBoard();
 			this.masterModel.setUpBoard();
 			this.masterPanel.requestUpdate();
+			this.masterPanel.requestReset();
 		} else if (command.equals("clear")) {
 			this.masterModel.emptyBoard();
 			this.masterPanel.requestUpdate();
+			this.masterPanel.requestReset();
 		} else {
 			System.out.println("Sad Trombone");
 		}

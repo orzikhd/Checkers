@@ -33,6 +33,7 @@ public class CheckersPanel extends JPanel {
 	private CheckersModel masterModel;
 	private CheckerListener listener;
 	private boolean needsRedraw;
+	private int preserveIndex;
 	
 	public CheckersPanel() {
 		super();
@@ -44,6 +45,7 @@ public class CheckersPanel extends JPanel {
 		this.tiles = new ArrayList<JPanel>();
 		this.listener = new CheckerListener(this);
 		this.boardWrapper.addMouseListener(listener);
+		this.preserveIndex = -1;
 		
 		masterModel.setUpBoard();
 		
@@ -90,20 +92,21 @@ public class CheckersPanel extends JPanel {
 		
 		List<Location> currState = this.masterModel.getBoardState();
 		
-		//boardWrapper.removeAll();
 		int i = 0;
 		for (Location currLoc : currState) {
 			JPanel currLocPanel = this.tiles.get(i);
 			currLocPanel.removeAll();
-			if (currLoc.getTileColor().equals("R")) {
-				currLocPanel.setBackground(Color.RED);
-				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.RED, CheckerListener.BORDER_THICKNESS));
-			} else if (currLoc.getTileColor().equals("B")) {
-				currLocPanel.setBackground(Color.BLACK);
-				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, CheckerListener.BORDER_THICKNESS));
-			} else {
-				currLocPanel.setBackground(Color.YELLOW);
-				currLocPanel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, CheckerListener.BORDER_THICKNESS));
+			if (i != this.preserveIndex) {
+				if (currLoc.getTileColor().equals("R")) {
+					currLocPanel.setBackground(Color.RED);
+					currLocPanel.setBorder(BorderFactory.createLineBorder(Color.RED, CheckerListener.BORDER_THICKNESS));
+				} else if (currLoc.getTileColor().equals("B")) {
+					currLocPanel.setBackground(Color.BLACK);
+					currLocPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, CheckerListener.BORDER_THICKNESS));
+				} else {
+					currLocPanel.setBackground(Color.YELLOW);
+					currLocPanel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, CheckerListener.BORDER_THICKNESS));
+				}
 			}
 			
 			if (currLoc.getPieceTeamColor() != Location.NULL_TEAM_COLOR) {
@@ -120,6 +123,7 @@ public class CheckersPanel extends JPanel {
 			}
 			
 			i++;
+			this.preserveIndex = -1;
 		}
 		boardWrapper.validate();
 	}
@@ -129,8 +133,14 @@ public class CheckersPanel extends JPanel {
 	 */
 	public void requestUpdate() {
 		this.needsRedraw = true;
-		this.listener.resetAllTracking();
 		this.repaint();
+	}
+	
+	/**
+	 * Requests the CheckersPanel to reset any tracking
+	 */
+	public void requestReset() {
+		this.listener.resetAllTracking();
 	}
 	
 	//switches the current player
@@ -149,6 +159,11 @@ public class CheckersPanel extends JPanel {
 		this.requestUpdate();
 	}
 	
+	//Set preserve index
+	//package-private
+	void requestPreserve(int index) {
+		this.preserveIndex = index;
+	}
 	
 	//Determines if a move with these indices is valid
 	//package-private

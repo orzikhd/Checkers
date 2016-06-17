@@ -68,8 +68,7 @@ public class CheckerListener implements MouseListener{
 				
 		int justPressedX = e.getX() / squareWidth;
 		int justPressedY = e.getY() / squareWidth;
-		System.out.println(justPressedX + ", " + justPressedY);
-		
+
 		int justPressedIndex = 8 * justPressedY + justPressedX;
 		int currentIndex = 8 * this.currentSquareY + this.currentSquareX;
 		int followUpIndex = 8 * this.followUpSquareY + this.followUpSquareX;
@@ -77,7 +76,7 @@ public class CheckerListener implements MouseListener{
 		
 		boolean justPressedValid = masterPanel.validSelection(justPressedIndex);
 		boolean currentValid = false;
-
+		
 		//check that it exists on the board before checking if its valid
 		if (currentIndex != dummyIndex) {
 			currentValid = masterPanel.validSelection(currentIndex);
@@ -109,23 +108,28 @@ public class CheckerListener implements MouseListener{
 			//situation: they pressed on the followUpSquare again
 			//if the move is actually valid-- execute it
 			if (this.masterPanel.validMove(currentIndex, followUpIndex)) {
-				
+							
 				this.masterPanel.requestMove(currentIndex, followUpIndex);
+				//this.clearBorderAt(currentIndex);
+				//this.clearBorderAt(followUpIndex);
 				
-				this.clearAllOtherBorders();
-				this.clearBorderAt(currentIndex);
+				//check if the move was a jump to set justJumped
+				boolean justJumped = Math.abs(justPressedX - this.currentSquareX) == 2;
+				System.out.println("justJumped: " + justJumped);
 				
 				//if can jump again (i.e. combo) then keep going
-				if (this.masterPanel.canJump(followUpIndex)) {
+				if (this.masterPanel.canJump(followUpIndex) && justJumped) {
 					System.out.println("beep");
-					System.out.println(this.followUpSquareX);
-					System.out.println(justPressedX);
-					this.currentSquareX = this.followUpSquareX;
-					this.currentSquareY = this.followUpSquareY;		
-					this.setCurrentBorder();
+					
+					this.currentSquareX = justPressedX;
+					this.currentSquareY = justPressedY;
+					this.colorBorderAt(justPressedIndex, VALID_SELECTION);
+					this.masterPanel.requestPreserve(justPressedIndex);
+					System.out.println(currentSquareX + ", " + currentSquareY);
 					this.statusMessage = CheckerListener.SELECT_FOLLOWUP_MESSAGE;
 				} else {
 					System.out.println("boop");
+					
 					this.masterPanel.switchPlayer();
 					this.currentSquareX = CheckerListener.DUMMY_COORDINATE;
 					this.currentSquareY = CheckerListener.DUMMY_COORDINATE;

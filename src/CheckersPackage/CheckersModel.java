@@ -202,16 +202,16 @@ public class CheckersModel {
 			//remove piece if a jump occurred
 			if (toX == frX - 2 && toY == frY + 2) {
 				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX - 1, frY + 1);
-				this.removePiece(new Location(frX - 1, frY + 1, piece.getTeamColor(), false, "W"));
+				this.removePiece(new Location(frX - 1, frY + 1, piece.getTeamColor(), false, this.board.getColorAtLocation(frX - 1, frY + 1)));
 			} else if (toX == frX + 2 && toY == frY + 2) {
 				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX + 1, frY + 1);
-				this.removePiece(new Location(frX + 1, frY + 1, piece.getTeamColor(), false, "W"));
+				this.removePiece(new Location(frX + 1, frY + 1, piece.getTeamColor(), false, this.board.getColorAtLocation(frX + 1, frY + 1)));
 			} else if (toX == frX - 2 && toY == frY - 2) {
 				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX - 1, frY - 1);
-				this.removePiece(new Location(frX - 1, frY - 1, piece.getTeamColor(), false, "W"));
+				this.removePiece(new Location(frX - 1, frY - 1, piece.getTeamColor(), false, this.board.getColorAtLocation(frX - 1, frY - 1)));
 			} else if (toX == frX + 2 && toY == frY - 2) {
 				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX + 1, frY - 1);
-				this.removePiece(new Location(frX + 1, frY - 1, piece.getTeamColor(), false, "W"));
+				this.removePiece(new Location(frX + 1, frY - 1, piece.getTeamColor(), false, this.board.getColorAtLocation(frX + 1, frY - 1)));
 			}
 		}
 	}
@@ -283,6 +283,14 @@ public class CheckersModel {
 		}
 		
 		if (this.currentPlayer == CheckersModel.PLAYER2 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
+			
+			//we know that the chosen piece had no jumps available and was chosen for moving
+			//if any other piece on this team has jumps available, then the original piece cannot move
+			for(Location fellowLoc : this.p2Locations) {
+				if (!this.jumpsAvailable(fellowLoc.getX(), fellowLoc.getY()).isEmpty()) {
+					return false;
+				}
+			}
 			
 			if (toX == left && toY == up || toX == right && toY == up){
 				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
