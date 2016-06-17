@@ -181,8 +181,7 @@ public class CheckersModelTest {
 		//6,3 -> 3*8 + 6 = 30
 		//4,5 -> 5*8 + 4 = 44
 		//5,4 -> 4*8 + 5 = 37
-		//3,2 -> 2*8 + 3 = 19
-		//4,3 -> 3*8 + 4 = 28
+
 		List<Location> startState = newModel.getBoardState();
 		assertTrue(newModel.checkValidMove(startState.get(21), startState.get(30)));
 		newModel.movePiece(startState.get(21), startState.get(30));
@@ -192,11 +191,8 @@ public class CheckersModelTest {
 		newModel.movePiece(secondState.get(44), secondState.get(37));
 		newModel.switchPlayer();
 		List<Location> thirdState = newModel.getBoardState();
-		assertTrue(newModel.checkValidMove(thirdState.get(19), thirdState.get(28)));
-		newModel.movePiece(thirdState.get(19), thirdState.get(28));
-		newModel.switchPlayer();
-		List<Location> testState = newModel.getBoardState();
-		assertTrue(newModel.checkValidMove(testState.get(37), testState.get(19)));
+		assertTrue(newModel.checkValidMove(thirdState.get(30), thirdState.get(44)));
+		newModel.movePiece(thirdState.get(30), thirdState.get(44));
 	}
 	
 	@Test

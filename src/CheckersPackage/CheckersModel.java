@@ -25,7 +25,7 @@ public class CheckersModel {
 	 * @param length of checkers board
 	 */
 	public CheckersModel() {
-		this.board = new CheckersBoard(LENGTH_CHECKERS_BOARD, GameTile.TILE_BLACK, GameTile.TILE_RED);
+		this.board = new CheckersBoard(LENGTH_CHECKERS_BOARD, GameTile.TILE_RED, GameTile.TILE_BLACK);
 		
 		this.p1Locations = new HashSet<Location>();
 		this.p2Locations = new HashSet<Location>();
@@ -260,7 +260,15 @@ public class CheckersModel {
 		}
 
 		if (this.currentPlayer == CheckersModel.PLAYER1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
-
+			
+			//we know that the chosen piece had no jumps available and was chosen for moving
+			//if any other piece on this team has jumps available, then the original piece cannot move
+			for(Location fellowLoc : this.p1Locations) {
+				if (!this.jumpsAvailable(fellowLoc.getX(), fellowLoc.getY()).isEmpty()) {
+					return false;
+				}
+			}
+			
 			if (toX == left && toY == down	|| toX == right && toY == down){
 				//initial if already checks that this spot is empty; don't have to worry about overriding existing piece
 				//we also now know that no jump is available

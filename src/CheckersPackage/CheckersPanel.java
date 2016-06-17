@@ -176,7 +176,6 @@ public class CheckersPanel extends JPanel {
 	boolean validSelection(int index) {
 		
 		Location selection = this.masterModel.getBoardState().get(index);
-		System.out.println(masterModel);
 		return this.masterModel.checkValidSelection(selection);
 	}
 	
