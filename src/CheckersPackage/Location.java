@@ -78,4 +78,14 @@ public class Location {
 		
 		return false;
 	}
+	
+	@Override
+	public int hashCode() {
+		return this.X * 13 + this.Y + this.pieceTeamColor * 21 + this.tileColor.hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		return "[(" + this.X + "," + this.Y + ") colored " + this.tileColor + " holds " + this.pieceTeamColor + ", isKing: " + this.isKing + "]";
+	}
 }

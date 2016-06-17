@@ -40,15 +40,15 @@ public class CheckersBoard implements GameBoard {
 			for (int j = 0; j < this.getLength(); j++) {
 				if (i % 2 == 0) {
 					if (colorFlip) {
-						this.tiles[i][j] = new GameTile(color2);
-					} else {
 						this.tiles[i][j] = new GameTile(color1);
+					} else {
+						this.tiles[i][j] = new GameTile(color2);
 					}
 				} else {
 					if (colorFlip) {
-						this.tiles[i][j] = new GameTile(color1);
-					} else {
 						this.tiles[i][j] = new GameTile(color2);
+					} else {
+						this.tiles[i][j] = new GameTile(color1);
 					}					
 				}
 				colorFlip = !colorFlip;

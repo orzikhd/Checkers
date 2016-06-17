@@ -197,8 +197,28 @@ public class CheckersModelTest {
 		newModel.switchPlayer();
 		List<Location> testState = newModel.getBoardState();
 		assertTrue(newModel.checkValidMove(testState.get(37), testState.get(19)));
-		
-		
+	}
+	
+	@Test
+	public void validateCantMoveWhenCanJumpTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+
+		//3,2 -> 2*8 + 3 = 19
+		//4,3 -> 3*8 + 4 = 28
+		//6,5 -> 5*8 + 6 = 46
+		//5,4 -> 4*8 + 5 = 37
+		//1,2 -> 2*8 + 1 = 17
+		List<Location> startState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(startState.get(19), startState.get(28)));
+		newModel.movePiece(startState.get(19), startState.get(28));
+		newModel.switchPlayer();
+		List<Location> secondState = newModel.getBoardState();
+		assertTrue(newModel.checkValidMove(secondState.get(46), secondState.get(37)));
+		newModel.movePiece(secondState.get(46), secondState.get(37));
+		newModel.switchPlayer();
+		List<Location> testState = newModel.getBoardState();
+		assertTrue(!newModel.checkValidSelection(testState.get(17)));
 	}
 	
 	@Test
@@ -231,10 +251,11 @@ public class CheckersModelTest {
 		CheckersModel newModel = new CheckersModel();
 		newModel.setUpBoard();
 		assertTrue(newModel.getBoardState().get(1).getPieceTeamColor() != Location.NULL_TEAM_COLOR);
+		assertEquals(newModel.countPlayer1(), 12);
 		Location removeTestLoc = newModel.getBoardState().get(1);
 		newModel.removePiece(removeTestLoc);
 		assertEquals(newModel.getBoardState().get(1).getPieceTeamColor(), Location.NULL_TEAM_COLOR);
-		
+		assertEquals(newModel.countPlayer1(), 11);
 	}
 	
 	@Test

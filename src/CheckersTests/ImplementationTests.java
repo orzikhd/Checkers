@@ -12,6 +12,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({MainTest.class
 			, GameBoardTest.class
+			, LocationTests.class
 			, CheckersModelTest.class/* list classes here */ })
 public final class ImplementationTests
 {

@@ -13,8 +13,8 @@ public class CheckersModel {
 	//player1 is the player starting at the top, player2 is the player starting at the bottom
 	
 	private CheckersBoard board;
-	private Set<CheckerPiece> p1Pieces;
-	private Set<CheckerPiece> p2Pieces;
+	private Set<Location> p1Locations;
+	private Set<Location> p2Locations;
 	private int currentPlayer;
 	public static final int LENGTH_CHECKERS_BOARD = 8;
 	public static final int PLAYER1 = BiColorPiece.TEAM1;
@@ -25,10 +25,10 @@ public class CheckersModel {
 	 * @param length of checkers board
 	 */
 	public CheckersModel() {
-		this.board = new CheckersBoard(LENGTH_CHECKERS_BOARD, "R", "B");
+		this.board = new CheckersBoard(LENGTH_CHECKERS_BOARD, GameTile.TILE_BLACK, GameTile.TILE_RED);
 		
-		this.p1Pieces = new HashSet<CheckerPiece>();
-		this.p2Pieces = new HashSet<CheckerPiece>();
+		this.p1Locations = new HashSet<Location>();
+		this.p2Locations = new HashSet<Location>();
 		this.currentPlayer = Location.NULL_TEAM_COLOR;
 	}
 	
@@ -37,7 +37,7 @@ public class CheckersModel {
 	 * @return int count number of pieces left for player 1
 	 */
 	public int countPlayer1() {
-		return p1Pieces.size();
+		return p1Locations.size();
 	}
 	
 	/**
@@ -45,7 +45,7 @@ public class CheckersModel {
 	 * @return int count number of pieces left for player 2
 	 */
 	public int countPlayer2() {
-		return p2Pieces.size();
+		return p2Locations.size();
 	}
 	
 	
@@ -81,8 +81,8 @@ public class CheckersModel {
 			}
 		}
 		
-		this.p1Pieces = new HashSet<CheckerPiece>();
-		this.p2Pieces = new HashSet<CheckerPiece>();
+		this.p1Locations = new HashSet<Location>();
+		this.p2Locations = new HashSet<Location>();
 	}
 	
 	/**
@@ -111,16 +111,19 @@ public class CheckersModel {
 	 * @effects if a piece was present at this location, it has been removed
 	 */
 	public void removePiece(Location removeFrom) {
-		GamePiece removed = this.board.getPieceAtLocation(removeFrom.getX(), removeFrom.getY());
+		this.board.putPieceAtLocation(removeFrom.getX(), removeFrom.getY(), null);
+		
 		if (removeFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
-			this.p1Pieces.remove(removed);
+			boolean changed = this.p1Locations.remove(removeFrom);
+			if (!changed) {
+				System.out.println(this.p1Locations);
+				System.out.println(removeFrom);
+			}
 		} else if (removeFrom.getPieceTeamColor() == BiColorPiece.TEAM2){
-			this.p2Pieces.remove(removed);
+			this.p2Locations.remove(removeFrom);
 		} else {
 			System.out.println("sad trombone");
 		}
-
-		this.board.putPieceAtLocation(removeFrom.getX(), removeFrom.getY(), null);
 	}
 	
 	/**
@@ -153,8 +156,8 @@ public class CheckersModel {
 			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
 				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
 					curr = new CheckerPiece(BiColorPiece.TEAM1);
-					p1Pieces.add(curr);
 					this.board.putPieceAtLocation(j, i, curr);
+					p1Locations.add(this.getLocationAtCoordinates(j, i));
 				}
 			}
 		}	
@@ -164,8 +167,8 @@ public class CheckersModel {
 			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
 				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
 					curr = new CheckerPiece(BiColorPiece.TEAM2);
-					p2Pieces.add(curr);
 					this.board.putPieceAtLocation(j, i, curr);
+					p2Locations.add(this.getLocationAtCoordinates(j, i));
 				}
 			}
 		}
@@ -184,10 +187,11 @@ public class CheckersModel {
 			CheckerPiece replacementPiece = new CheckerPiece(moveFrom.getPieceTeamColor());
 			this.removePiece(moveFrom);
 			this.board.putPieceAtLocation(moveTo.getX(), moveTo.getY(), replacementPiece);
+			//put the new piece's location in its correct set
 			if (replacementPiece.getTeamColor() == BiColorPiece.TEAM1) {
-				this.p1Pieces.add(replacementPiece);
+				this.p1Locations.add(this.getLocationAtCoordinates(moveTo.getX(), moveTo.getY()));
 			} else {
-				this.p2Pieces.add(replacementPiece);
+				this.p2Locations.add(this.getLocationAtCoordinates(moveTo.getX(), moveTo.getY()));
 			}
 			
 			int frX = moveFrom.getX();
@@ -245,15 +249,14 @@ public class CheckersModel {
 		int down = frY + 1;
 				
 		//at this point we know the jumpto spot is empty, the from spot is a piece, and someone is playing
-		int plsrestartdebug = 0;
 		//if a jump is available, this should be a jump, otherwise its an invalid move
 		List<Location> jumps = this.jumpsAvailable(frX, frY);
 		if (!jumps.isEmpty()) {
 			if (jumps.contains(this.getLocationAtCoordinates(toX, toY))) {
 				return true;
-			}	
-			
-			return false;
+			} else {	
+				return false;
+			}
 		}
 
 		if (this.currentPlayer == CheckersModel.PLAYER1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
