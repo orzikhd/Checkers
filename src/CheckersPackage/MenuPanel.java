@@ -36,6 +36,7 @@ public class MenuPanel extends JPanel implements ActionListener{
 		
 		Font titleFont = new Font("Verdana", Font.BOLD, 40);
 		Font messageFont = new Font("Verdana", Font.BOLD, 20);
+		Font buttonFont = new Font("Verdana", Font.BOLD, 20);
 		
 		JPanel titleWrapper = new JPanel();
 		titleWrapper.setLayout(new BoxLayout(titleWrapper, BoxLayout.LINE_AXIS));
@@ -46,9 +47,9 @@ public class MenuPanel extends JPanel implements ActionListener{
 		titleLabel.setFont(titleFont);
 		titleLabel.setText("Checkers!");
 		
-		titleWrapper.add(Box.createRigidArea(new Dimension(100, 0)));
+		titleWrapper.add(Box.createRigidArea(new Dimension(90, 0)));
 		titleWrapper.add(titleLabel);
-		titleWrapper.add(Box.createRigidArea(new Dimension(100, 0)));
+		titleWrapper.add(Box.createRigidArea(new Dimension(90, 0)));
 		
 		this.message.setFont(messageFont);
 		//this.message.setText("Welcome to Checkers!");
@@ -62,13 +63,17 @@ public class MenuPanel extends JPanel implements ActionListener{
 
 		JPanel buttonWrapper = new JPanel();
 		buttonWrapper.setLayout(new BoxLayout(buttonWrapper, BoxLayout.LINE_AXIS));
+		buttonWrapper.setOpaque(false);
 		
 		JButton clearBoard = new JButton("Clear Board");
 		clearBoard.setActionCommand("clear");
 		clearBoard.addActionListener(this);
+		clearBoard.setFont(buttonFont);
 		buttonWrapper.add(clearBoard);
+		buttonWrapper.add(Box.createRigidArea(new Dimension(25, 0)));
 		
 		JButton resetBoard = new JButton("Reset Board");
+		resetBoard.setFont(buttonFont);
 		resetBoard.setActionCommand("reset");
 		resetBoard.addActionListener(this);
 		buttonWrapper.add(resetBoard);
@@ -78,7 +83,7 @@ public class MenuPanel extends JPanel implements ActionListener{
 		this.add(currentPlayer);
 		this.add(message);
 		this.add(debug);
-		this.add(Box.createVerticalStrut(300));
+		this.add(Box.createVerticalStrut(350));
 		this.add(buttonWrapper);	
 		this.add(Box.createVerticalStrut(10));
 	}

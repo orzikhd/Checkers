@@ -20,7 +20,7 @@ public class CheckersMain {
 		frame.setBackground(Color.CYAN);
 		
 		CheckersPanel checkersWrapper = new CheckersPanel();
-		checkersWrapper.setBackground(Color.MAGENTA);
+		checkersWrapper.setBackground(Color.BLACK);
 		frame.add(checkersWrapper);
 		
 		frame.pack();

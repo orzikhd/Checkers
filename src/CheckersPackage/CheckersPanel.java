@@ -59,16 +59,16 @@ public class CheckersPanel extends JPanel {
 		boardWrapper.setBackground(Color.WHITE);
 		boardWrapper.validate();
 		
-		menu.setBackground(Color.ORANGE);
+		menu.setBackground(Color.WHITE);
 		menu.setPreferredSize(new Dimension(500, 1024));
 		menu.validate();
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));	
 		this.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.add(boardWrapper);
-		this.add(Box.createRigidArea(new Dimension(10, 0)));
+		this.add(Box.createRigidArea(new Dimension(30, 0)));
 		this.add(menu);
-		this.add(Box.createRigidArea(new Dimension(10, 0)));
+		this.add(Box.createRigidArea(new Dimension(30, 0)));
 		this.needsRedraw = false;
 		
 		drawState();
