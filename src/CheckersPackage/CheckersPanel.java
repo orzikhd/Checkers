@@ -133,6 +133,14 @@ public class CheckersPanel extends JPanel {
 			
 			i++;
 		}
+		
+		int victor = this.masterModel.declareVictor();
+		if (victor == CheckersModel.PLAYER1
+				|| victor == CheckersModel.PLAYER2) {
+			this.listener.declareVictor(victor);
+			System.out.println("triggered");
+		}
+		
 		this.preserveIndex = -1;
 		boardWrapper.validate();
 	}

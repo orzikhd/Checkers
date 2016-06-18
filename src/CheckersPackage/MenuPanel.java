@@ -1,6 +1,5 @@
 package CheckersPackage;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -8,7 +7,6 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,15 +15,13 @@ import javax.swing.JPanel;
 
 public class MenuPanel extends JPanel implements ActionListener{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5870916876473839398L;
 	private CheckersModel masterModel;
 	private CheckersPanel masterPanel;
 	private JLabel message;
 	private JLabel currentPlayer;
 	private JLabel debug;
+	private boolean gameOver;
 	
 	public MenuPanel(CheckersModel masterModel, CheckersPanel masterPanel) {
 		super();
@@ -36,6 +32,7 @@ public class MenuPanel extends JPanel implements ActionListener{
 		this.currentPlayer = new JLabel();
 		this.debug = new JLabel();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.gameOver = false;
 		
 		Font titleFont = new Font("Verdana", Font.BOLD, 40);
 		Font messageFont = new Font("Verdana", Font.BOLD, 20);
@@ -89,9 +86,14 @@ public class MenuPanel extends JPanel implements ActionListener{
 	@Override 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		//this.message.setText("curr size: " + this.getWidth() + ", " + this.getHeight());
-		//this.debug.setText("curr parent size: " + this.getParent().getWidth() + ", " + this.getParent().getHeight());
-		this.message.setText(this.masterPanel.getStatusMessage());
+		
+		if (!this.gameOver) {
+			this.message.setText(this.masterPanel.getStatusMessage());
+			System.out.println(this.message.getText());
+			if (this.message.getText().equals(CheckerListener.PLAYER1_WINS_MESSAGE) || this.message.getText().equals(CheckerListener.PLAYER2_WINS_MESSAGE)) {
+				this.gameOver = true;
+			}
+		}
 		
 		if (this.masterModel.getCurrentPlayer() == CheckersModel.PLAYER1) {
 			this.currentPlayer.setText("Player 1's turn");
@@ -110,10 +112,13 @@ public class MenuPanel extends JPanel implements ActionListener{
 			this.masterModel.setUpBoard();
 			this.masterPanel.requestUpdate();
 			this.masterPanel.requestReset();
+			this.gameOver = false;
 		} else if (command.equals("clear")) {
 			this.masterModel.emptyBoard();
 			this.masterPanel.requestUpdate();
 			this.masterPanel.requestReset();
+			this.message.setText("Board empty");
+			this.gameOver = true;
 		} else {
 			System.out.println("Sad Trombone");
 		}

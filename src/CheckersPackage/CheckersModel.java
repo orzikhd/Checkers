@@ -122,18 +122,59 @@ public class CheckersModel {
 				System.out.println(removeFrom);
 			}
 		} else if (removeFrom.getPieceTeamColor() == BiColorPiece.TEAM2){
-			this.p2Locations.remove(removeFrom);
+			boolean changed = this.p2Locations.remove(removeFrom);
+			if (!changed) {
+				System.out.println(this.p2Locations);
+				System.out.println(removeFrom);
+			}
 		} else {
 			System.out.println("sad trombone");
 		}
 	}
 	
 	/**
-	 * Returns if player1 or player2 has won, if they have.
-	 * @return A string representing player1, player2, or that no one has won yet.
+	 * Returns if player1 or player2 has won.
+	 * A player wins if the other opponent has no more pieces or no more moves
+	 * @return int value corresponding to the winning player, or a third value if there is no winner yet
 	 */
-	public String declareVictor() {
-		return null;
+	public int declareVictor() {
+		boolean p1HasMove = false;
+		
+		//need to switch current player so that move validation works
+		int current = this.currentPlayer;
+		
+		this.currentPlayer = CheckersModel.PLAYER1;
+		for (Location p1Piece : this.p1Locations) {
+			if (this.checkValidSelection(p1Piece)) {
+				p1HasMove = true;
+				break;
+			}
+		}
+		
+		if (!p1HasMove) {
+			//player 1 has no available moves so player 2 wins
+			this.currentPlayer = current;
+			return CheckersModel.PLAYER2;
+		}
+		
+		boolean p2HasMove = false;
+		this.currentPlayer = CheckersModel.PLAYER2;
+		for (Location p2Piece : this.p2Locations) {
+			if (this.checkValidSelection(p2Piece)) {
+				p2HasMove = true;
+				break;
+			}
+		}
+		
+		if (!p2HasMove) {
+			//player 2 has no available moves so player 1 wins
+			this.currentPlayer = current;
+			return CheckersModel.PLAYER1;
+		}
+		
+		//both players have moves left
+		this.currentPlayer = current;
+		return -1;
 	}
 	
 	@Override
@@ -190,8 +231,8 @@ public class CheckersModel {
 			this.removePiece(moveFrom);
 			
 			//check if the piece should be crowned
-			if (replacementPiece.getTeamColor() == CheckerPiece.TEAM1 && moveTo.getY() == CheckersModel.P1_KING_THRESHOLD
-				|| replacementPiece.getTeamColor() == CheckerPiece.TEAM2 && moveTo.getY() == CheckersModel.P2_KING_THRESHOLD) {
+			if (replacementPiece.getTeamColor() == CheckerPiece.TEAM1 && moveTo.getY() == CheckersModel.P1_KING_THRESHOLD && !replacementPiece.isKing()
+				|| replacementPiece.getTeamColor() == CheckerPiece.TEAM2 && moveTo.getY() == CheckersModel.P2_KING_THRESHOLD && !replacementPiece.isKing()) {
 				replacementPiece.flipPiece();
 			}
 			

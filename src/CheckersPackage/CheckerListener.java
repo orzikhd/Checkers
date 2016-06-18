@@ -26,6 +26,8 @@ public class CheckerListener implements MouseListener{
 	private static final String SELECT_FOLLOWUP_MESSAGE = "Choose where to move it";
 	private static final String INVALID_FOLLOWUP_MESSAGE = "You cannot move here";
 	private static final String CONFIRM_MOVE_MESSAGE = "Click again to confirm move";
+	public static final String PLAYER1_WINS_MESSAGE = "Player 1 wins!";
+	public static final String PLAYER2_WINS_MESSAGE = "Player 2 wins!";
 	
 	private CheckersPanel masterPanel;
 	private String statusMessage;
@@ -54,6 +56,15 @@ public class CheckerListener implements MouseListener{
 		this.followUpSquareX = CheckerListener.DUMMY_COORDINATE;
 		this.followUpSquareY = CheckerListener.DUMMY_COORDINATE;	
 		this.statusMessage = CheckerListener.RESET_MESSAGE;
+	}
+	
+	//package-private
+	void declareVictor(int victor) {
+		if (victor == CheckersModel.PLAYER1) {
+			this.statusMessage = CheckerListener.PLAYER1_WINS_MESSAGE;
+		} else {
+			this.statusMessage = CheckerListener.PLAYER2_WINS_MESSAGE;
+		}
 	}
 	
 	//package-private
@@ -110,17 +121,12 @@ public class CheckerListener implements MouseListener{
 			if (this.masterPanel.validMove(currentIndex, followUpIndex)) {
 							
 				this.masterPanel.requestMove(currentIndex, followUpIndex);
-				//this.clearBorderAt(currentIndex);
-				//this.clearBorderAt(followUpIndex);
 				
 				//check if the move was a jump to set justJumped
 				boolean justJumped = Math.abs(justPressedX - this.currentSquareX) == 2;
-				System.out.println("justJumped: " + justJumped);
 				
 				//if can jump again (i.e. combo) then keep going
 				if (this.masterPanel.canJump(followUpIndex) && justJumped) {
-					System.out.println("beep");
-					
 					this.currentSquareX = justPressedX;
 					this.currentSquareY = justPressedY;
 					this.colorBorderAt(justPressedIndex, VALID_SELECTION);
@@ -128,8 +134,6 @@ public class CheckerListener implements MouseListener{
 					System.out.println(currentSquareX + ", " + currentSquareY);
 					this.statusMessage = CheckerListener.SELECT_FOLLOWUP_MESSAGE;
 				} else {
-					System.out.println("boop");
-					
 					this.masterPanel.switchPlayer();
 					this.currentSquareX = CheckerListener.DUMMY_COORDINATE;
 					this.currentSquareY = CheckerListener.DUMMY_COORDINATE;
@@ -197,18 +201,6 @@ public class CheckerListener implements MouseListener{
 		} else {
 			this.colorBorderAt(followIndex, CheckerListener.INVALID_FOLLOWUP);
 		}		
-	}
-	
-	//clear all borders not associated with current clicked piece; i.e. only one piece highlighted at a time
-	private void clearAllOtherBorders() {
-		
-		int boardIndex = 8 * this.currentSquareY + this.currentSquareX;
-		
-		for (int i = 0; i < 64; i++) {
-			if (i != boardIndex) {
-				this.clearBorderAt(i);
-			}
-		}
 	}
 	
 	//clear borders on current and followup selection

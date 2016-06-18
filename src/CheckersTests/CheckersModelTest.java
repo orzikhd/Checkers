@@ -308,11 +308,44 @@ public class CheckersModelTest {
 	
 	@Test
 	public void declarePlayer1VictorTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		//player 2 pieces range from 0,5 to 7,7
+		//5*8 + 0 = 40, 7*8 + 7 = 63
+		List<Location> currState = newModel.getBoardState();
+		Location removeFrom = null;
+		for (int i = 40; i < 64; i++) {
+			removeFrom = currState.get(i);
+			newModel.removePiece(removeFrom);
+		}
 		
+		assertEquals(newModel.declareVictor(), CheckersModel.PLAYER1);
 	}
 	
 	@Test
 	public void declarePlayer2VictorTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		//player 2 pieces range from 0,0 to 7,2
+		//2*8 + 7 = 23
+		List<Location> currState = newModel.getBoardState();
+		Location removeFrom = null;
+		for (int i = 0; i < 24; i++) {
+			removeFrom = currState.get(i);
+			newModel.removePiece(removeFrom);
+		}
 		
+		assertEquals(newModel.declareVictor(), CheckersModel.PLAYER2);		
+	}
+	
+	@Test
+	public void declareNoCurrentWinerTest() {
+		CheckersModel newModel = new CheckersModel();
+		newModel.setUpBoard();
+		assertEquals(newModel.declareVictor(), -1);
+		assertEquals(newModel.getCurrentPlayer(), CheckersModel.PLAYER1);
+		newModel.switchPlayer();
+		assertEquals(newModel.declareVictor(), -1);
+		assertEquals(newModel.getCurrentPlayer(), CheckersModel.PLAYER2);
 	}
 }
