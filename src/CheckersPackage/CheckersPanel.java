@@ -1,12 +1,9 @@
 package CheckersPackage;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +13,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
 /**
  * CheckersPanel handles all logic relevant to maintaining the Checkers Game, including its board and menu
@@ -138,7 +134,6 @@ public class CheckersPanel extends JPanel {
 		if (victor == CheckersModel.PLAYER1
 				|| victor == CheckersModel.PLAYER2) {
 			this.listener.declareVictor(victor);
-			System.out.println("triggered");
 		}
 		
 		this.preserveIndex = -1;

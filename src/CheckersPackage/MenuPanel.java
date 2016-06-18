@@ -94,7 +94,6 @@ public class MenuPanel extends JPanel implements ActionListener{
 		
 		if (!this.gameOver) {
 			this.message.setText(this.masterPanel.getStatusMessage());
-			System.out.println(this.message.getText());
 			if (this.message.getText().equals(CheckerListener.PLAYER1_WINS_MESSAGE) || this.message.getText().equals(CheckerListener.PLAYER2_WINS_MESSAGE)) {
 				this.gameOver = true;
 			}
@@ -124,8 +123,6 @@ public class MenuPanel extends JPanel implements ActionListener{
 			this.masterPanel.requestReset();
 			this.message.setText("Board empty");
 			this.gameOver = true;
-		} else {
-			System.out.println("Sad Trombone");
 		}
 	}
 }

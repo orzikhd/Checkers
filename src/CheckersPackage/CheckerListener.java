@@ -5,9 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 
 /**
  * Listens for actions on a particular checker
@@ -131,7 +129,6 @@ public class CheckerListener implements MouseListener{
 					this.currentSquareY = justPressedY;
 					this.colorBorderAt(justPressedIndex, VALID_SELECTION);
 					this.masterPanel.requestPreserve(justPressedIndex);
-					System.out.println(currentSquareX + ", " + currentSquareY);
 					this.statusMessage = CheckerListener.SELECT_FOLLOWUP_MESSAGE;
 				} else {
 					this.masterPanel.switchPlayer();
