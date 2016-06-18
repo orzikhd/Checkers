@@ -96,6 +96,7 @@ public class MenuPanel extends JPanel implements ActionListener{
 			this.message.setText(this.masterPanel.getStatusMessage());
 			if (this.message.getText().equals(CheckerListener.PLAYER1_WINS_MESSAGE) || this.message.getText().equals(CheckerListener.PLAYER2_WINS_MESSAGE)) {
 				this.gameOver = true;
+				System.out.println("gameOver triggered");
 			}
 		}
 		

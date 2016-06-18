@@ -135,6 +135,7 @@ public class CheckersPanel extends JPanel {
 		if (victor == CheckersModel.PLAYER1
 				|| victor == CheckersModel.PLAYER2) {
 			this.listener.declareVictor(victor);
+			System.out.println("triggered");
 		}
 		
 		this.preserveIndex = -1;

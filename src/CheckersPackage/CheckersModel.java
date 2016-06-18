@@ -252,16 +252,16 @@ public class CheckersModel {
 			//remove piece if a jump occurred
 			if (toX == frX - 2 && toY == frY + 2) {
 				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX - 1, frY + 1);
-				this.removePiece(new Location(frX - 1, frY + 1, piece.getTeamColor(), false, this.board.getColorAtLocation(frX - 1, frY + 1)));
+				this.removePiece(new Location(frX - 1, frY + 1, piece.getTeamColor(), piece.isKing(), this.board.getColorAtLocation(frX - 1, frY + 1)));
 			} else if (toX == frX + 2 && toY == frY + 2) {
 				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX + 1, frY + 1);
-				this.removePiece(new Location(frX + 1, frY + 1, piece.getTeamColor(), false, this.board.getColorAtLocation(frX + 1, frY + 1)));
+				this.removePiece(new Location(frX + 1, frY + 1, piece.getTeamColor(), piece.isKing(), this.board.getColorAtLocation(frX + 1, frY + 1)));
 			} else if (toX == frX - 2 && toY == frY - 2) {
 				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX - 1, frY - 1);
-				this.removePiece(new Location(frX - 1, frY - 1, piece.getTeamColor(), false, this.board.getColorAtLocation(frX - 1, frY - 1)));
+				this.removePiece(new Location(frX - 1, frY - 1, piece.getTeamColor(), piece.isKing(), this.board.getColorAtLocation(frX - 1, frY - 1)));
 			} else if (toX == frX + 2 && toY == frY - 2) {
 				CheckerPiece piece = (CheckerPiece)this.board.getPieceAtLocation(frX + 1, frY - 1);
-				this.removePiece(new Location(frX + 1, frY - 1, piece.getTeamColor(), false, this.board.getColorAtLocation(frX + 1, frY - 1)));
+				this.removePiece(new Location(frX + 1, frY - 1, piece.getTeamColor(), piece.isKing(), this.board.getColorAtLocation(frX + 1, frY - 1)));
 			}
 		}
 	}
