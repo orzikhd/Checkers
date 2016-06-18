@@ -19,6 +19,8 @@ public class CheckersModel {
 	public static final int LENGTH_CHECKERS_BOARD = 8;
 	public static final int PLAYER1 = BiColorPiece.TEAM1;
 	public static final int PLAYER2 = BiColorPiece.TEAM2;
+	private static final int P1_KING_THRESHOLD = 7;
+	private static final int P2_KING_THRESHOLD = 0;
 	
 	/**
 	 * Models a Checkers Board of given length
@@ -184,11 +186,18 @@ public class CheckersModel {
 	 */
 	public void movePiece(Location moveFrom, Location moveTo) {
 		if (checkValidMove(moveFrom, moveTo)) {
-			CheckerPiece replacementPiece = new CheckerPiece(moveFrom.getPieceTeamColor());
+			CheckerPiece replacementPiece = new CheckerPiece(moveFrom.getPieceTeamColor(), moveFrom.getIsKing());
 			this.removePiece(moveFrom);
+			
+			//check if the piece should be crowned
+			if (replacementPiece.getTeamColor() == CheckerPiece.TEAM1 && moveTo.getY() == CheckersModel.P1_KING_THRESHOLD
+				|| replacementPiece.getTeamColor() == CheckerPiece.TEAM2 && moveTo.getY() == CheckersModel.P2_KING_THRESHOLD) {
+				replacementPiece.flipPiece();
+			}
+			
 			this.board.putPieceAtLocation(moveTo.getX(), moveTo.getY(), replacementPiece);
 			//put the new piece's location in its correct set
-			if (replacementPiece.getTeamColor() == BiColorPiece.TEAM1) {
+			if (replacementPiece.getTeamColor() == CheckerPiece.TEAM1) {
 				this.p1Locations.add(this.getLocationAtCoordinates(moveTo.getX(), moveTo.getY()));
 			} else {
 				this.p2Locations.add(this.getLocationAtCoordinates(moveTo.getX(), moveTo.getY()));

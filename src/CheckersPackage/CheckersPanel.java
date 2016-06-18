@@ -112,19 +112,28 @@ public class CheckersPanel extends JPanel {
 			if (currLoc.getPieceTeamColor() != Location.NULL_TEAM_COLOR) {
 				ImageIcon icon = null;
 				if (currLoc.getPieceTeamColor() == 1) {
-					icon = new ImageIcon("src/Images/BlackChecker.png");
+					if (currLoc.getIsKing()) {
+						icon = new ImageIcon("src/Images/BlackCheckerKing.png");
+					} else {
+						icon = new ImageIcon("src/Images/BlackChecker.png");
+					}
 				}
 				if (currLoc.getPieceTeamColor() == 2) {
-					icon = new ImageIcon("src/Images/RedChecker.png");
+					if (currLoc.getIsKing()) {
+						icon = new ImageIcon("src/Images/RedCheckerKing.png");
+					} else {
+						icon = new ImageIcon("src/Images/RedChecker.png");
+					}
 				}
 				
 				JLabel pieceName = new JLabel(icon);
+				currLocPanel.removeAll();
 				currLocPanel.add(pieceName);
 			}
 			
 			i++;
-			this.preserveIndex = -1;
 		}
+		this.preserveIndex = -1;
 		boardWrapper.validate();
 	}
 	
