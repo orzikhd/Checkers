@@ -2,8 +2,7 @@ package CheckersPackage;
 
 /**
  * Represents a single tile on a gameboard,
- * including the occupying piece if one exists
- * and the tile's color
+ * through its color and occupying piece (if one exists).
  */
 public class GameTile {
 	
@@ -13,7 +12,7 @@ public class GameTile {
 	 */
 	
 	private GamePiece occupyingPiece;
-	private String tileColor;
+	private String color;
 	
 	/**
 	 * Red Color Designation
@@ -31,15 +30,15 @@ public class GameTile {
 	public static final String TILE_WHITE = new String("W");
 	
 	/**
-	 * Constructs a new GameTile of the default color 
+	 * Constructs an empty GameTile of the default color. 
 	 */
 	public GameTile() {
 		this(TILE_WHITE);
 	}
 	
 	/**
-	 * Constructs a GameTile of the specified color
-	 * @param tileColor String color specified for this tile
+	 * Constructs an empty GameTile of the specified color.
+	 * @param tileColor String color being specified for this tile
 	 * @requires tileColor should be one of the tile color constants available
 	 */
 	public GameTile(String tileColor) {
@@ -52,11 +51,11 @@ public class GameTile {
 		}
 		
 		this.occupyingPiece = null;
-		this.tileColor = tileColor;
+		this.color = tileColor;
 	}
 	
 	/**
-	 * Returns the occupying GamePiece
+	 * Returns the occupying GamePiece.
 	 * @return GamePiece if there is a piece on this tile, null otherwise
 	 */
 	public GamePiece getOccupyingPiece() {
@@ -64,19 +63,19 @@ public class GameTile {
 	}
 	
 	/**
-	 * Sets the occupyingPiece of this tile to the given piece
-	 * @param newPiece
+	 * Sets the occupyingPiece of this tile to the given piece.
+	 * @param newPiece Piece to place in this tile
 	 */
 	public void putOccupyingPiece(GamePiece newPiece) {
 		this.occupyingPiece = newPiece;
 	}
 	
 	/**
-	 * Returns this tile's color
+	 * Returns this tile's tile color.
 	 * @return String representing this tile's color
 	 */
 	public String getTileColor() {
-		return this.tileColor;
+		return this.color;
 	}
 }
 

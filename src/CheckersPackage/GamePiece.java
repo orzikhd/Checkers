@@ -1,7 +1,8 @@
 package CheckersPackage;
 
 /**
- * A GamePiece is an object to represent a piece on a gameboard
+ * A GamePiece is an object to represent a piece on a gameboard.
+ * 
  */
 public class GamePiece {
 	/**

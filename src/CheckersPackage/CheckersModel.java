@@ -16,15 +16,30 @@ public class CheckersModel {
 	private Set<Location> p1Locations;
 	private Set<Location> p2Locations;
 	private int currentPlayer;
+	
+	/**
+	 * The length of a Checkers Board
+	 */
 	public static final int LENGTH_CHECKERS_BOARD = 8;
-	public static final int PLAYER1 = BiColorPiece.TEAM1;
-	public static final int PLAYER2 = BiColorPiece.TEAM2;
-	private static final int P1_KING_THRESHOLD = 7;
+	
+	/**
+	 * Player/Team 1 Designation
+	 */
+	public static final int PLAYER1 = BiColorPiece.COLOR1;
+
+	/**
+	 * Player/Team 2 Designation
+	 */
+	public static final int PLAYER2 = BiColorPiece.COLOR2;
+	
+	//lower edge of board
+	private static final int P1_KING_THRESHOLD = LENGTH_CHECKERS_BOARD - 1;
+	
+	//upper edge of board
 	private static final int P2_KING_THRESHOLD = 0;
 	
 	/**
-	 * Models a Checkers Board of given length
-	 * @param length of checkers board
+	 * Models a Checkers Board of the preset length
 	 */
 	public CheckersModel() {
 		this.board = new CheckersBoard(LENGTH_CHECKERS_BOARD, GameTile.TILE_RED, GameTile.TILE_BLACK);
@@ -115,13 +130,13 @@ public class CheckersModel {
 	public void removePiece(Location removeFrom) {
 		this.board.putPieceAtLocation(removeFrom.getX(), removeFrom.getY(), null);
 		
-		if (removeFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
+		if (removeFrom.getPieceTeamColor() == BiColorPiece.COLOR1) {
 			boolean changed = this.p1Locations.remove(removeFrom);
 			if (!changed) {
 				System.out.println(this.p1Locations);
 				System.out.println(removeFrom);
 			}
-		} else if (removeFrom.getPieceTeamColor() == BiColorPiece.TEAM2){
+		} else if (removeFrom.getPieceTeamColor() == BiColorPiece.COLOR2){
 			boolean changed = this.p2Locations.remove(removeFrom);
 			if (!changed) {
 				System.out.println(this.p2Locations);
@@ -198,7 +213,7 @@ public class CheckersModel {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
 				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
-					curr = new CheckerPiece(BiColorPiece.TEAM1);
+					curr = new CheckerPiece(BiColorPiece.COLOR1);
 					this.board.putPieceAtLocation(j, i, curr);
 					p1Locations.add(this.getLocationAtCoordinates(j, i));
 				}
@@ -209,7 +224,7 @@ public class CheckersModel {
 		for (int i = 5; i < LENGTH_CHECKERS_BOARD; i++) {
 			for (int j = 0; j < LENGTH_CHECKERS_BOARD; j++) {
 				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
-					curr = new CheckerPiece(BiColorPiece.TEAM2);
+					curr = new CheckerPiece(BiColorPiece.COLOR2);
 					this.board.putPieceAtLocation(j, i, curr);
 					p2Locations.add(this.getLocationAtCoordinates(j, i));
 				}
@@ -231,14 +246,14 @@ public class CheckersModel {
 			this.removePiece(moveFrom);
 			
 			//check if the piece should be crowned
-			if (replacementPiece.getTeamColor() == CheckerPiece.TEAM1 && moveTo.getY() == CheckersModel.P1_KING_THRESHOLD && !replacementPiece.isKing()
-				|| replacementPiece.getTeamColor() == CheckerPiece.TEAM2 && moveTo.getY() == CheckersModel.P2_KING_THRESHOLD && !replacementPiece.isKing()) {
+			if (replacementPiece.getTeamColor() == CheckerPiece.COLOR1 && moveTo.getY() == CheckersModel.P1_KING_THRESHOLD && !replacementPiece.isKing()
+				|| replacementPiece.getTeamColor() == CheckerPiece.COLOR2 && moveTo.getY() == CheckersModel.P2_KING_THRESHOLD && !replacementPiece.isKing()) {
 				replacementPiece.flipPiece();
 			}
 			
 			this.board.putPieceAtLocation(moveTo.getX(), moveTo.getY(), replacementPiece);
 			//put the new piece's location in its correct set
-			if (replacementPiece.getTeamColor() == CheckerPiece.TEAM1) {
+			if (replacementPiece.getTeamColor() == CheckerPiece.COLOR1) {
 				this.p1Locations.add(this.getLocationAtCoordinates(moveTo.getX(), moveTo.getY()));
 			} else {
 				this.p2Locations.add(this.getLocationAtCoordinates(moveTo.getX(), moveTo.getY()));
@@ -309,7 +324,7 @@ public class CheckersModel {
 			}
 		}
 
-		if (this.currentPlayer == CheckersModel.PLAYER1 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM1) {
+		if (this.currentPlayer == CheckersModel.PLAYER1 && moveFrom.getPieceTeamColor() == BiColorPiece.COLOR1) {
 			
 			//we know that the chosen piece had no jumps available and was chosen for moving
 			//if any other piece on this team has jumps available, then the original piece cannot move
@@ -332,7 +347,7 @@ public class CheckersModel {
 			}		
 		}
 		
-		if (this.currentPlayer == CheckersModel.PLAYER2 && moveFrom.getPieceTeamColor() == BiColorPiece.TEAM2) {
+		if (this.currentPlayer == CheckersModel.PLAYER2 && moveFrom.getPieceTeamColor() == BiColorPiece.COLOR2) {
 			
 			//we know that the chosen piece had no jumps available and was chosen for moving
 			//if any other piece on this team has jumps available, then the original piece cannot move
@@ -385,14 +400,14 @@ public class CheckersModel {
 		CheckerPiece farUpRight = surroundingJumpPieces.get(3);
 		
 		Location toAdd;
-		if (startPiece.getTeamColor() == CheckerPiece.TEAM1 && this.getCurrentPlayer() == CheckersModel.PLAYER1) {			
-			if (downLeft != null && downLeft.getTeamColor() == CheckerPiece.TEAM2
+		if (startPiece.getTeamColor() == CheckerPiece.COLOR1 && this.getCurrentPlayer() == CheckersModel.PLAYER1) {			
+			if (downLeft != null && downLeft.getTeamColor() == CheckerPiece.COLOR2
 					&& farDownLeft == null
 					&& validCoordinate(frX - 2) && validCoordinate(frY + 2)) {
 				//add farDownLeft to result
 				toAdd = this.getLocationAtCoordinates(frX - 2, frY + 2);
 				result.add(toAdd);
-			} else if (downRight != null && downRight.getTeamColor() == CheckerPiece.TEAM2
+			} else if (downRight != null && downRight.getTeamColor() == CheckerPiece.COLOR2
 					&& farDownRight == null
 					&& validCoordinate(frX + 2) && validCoordinate(frY + 2)) {
 				//add farDownRight to result
@@ -400,13 +415,13 @@ public class CheckersModel {
 				result.add(toAdd);
 			} else {
 				if (startPiece.isKing()) {
-					if (upLeft != null && upLeft.getTeamColor() == CheckerPiece.TEAM2
+					if (upLeft != null && upLeft.getTeamColor() == CheckerPiece.COLOR2
 							&& farUpLeft == null
 							&& validCoordinate(frX - 2) && validCoordinate(frY - 2)) {
 						//add farUpLeft to result
 						toAdd = this.getLocationAtCoordinates(frX - 2, frY - 2);
 						result.add(toAdd);
-					} else if (upRight != null && upRight.getTeamColor() == CheckerPiece.TEAM2
+					} else if (upRight != null && upRight.getTeamColor() == CheckerPiece.COLOR2
 							&& farUpRight == null
 							&& validCoordinate(frX + 2) && validCoordinate(frY - 2)) {
 						//add farUpRight to result
@@ -415,14 +430,14 @@ public class CheckersModel {
 					}					
 				}
 			}
-		} else if (startPiece.getTeamColor() == CheckerPiece.TEAM2 && this.getCurrentPlayer() == CheckersModel.PLAYER2) {
-			if (upLeft != null && upLeft.getTeamColor() == CheckerPiece.TEAM1
+		} else if (startPiece.getTeamColor() == CheckerPiece.COLOR2 && this.getCurrentPlayer() == CheckersModel.PLAYER2) {
+			if (upLeft != null && upLeft.getTeamColor() == CheckerPiece.COLOR1
 					&& farUpLeft == null
 					&& validCoordinate(frX - 2) && validCoordinate(frY - 2)) {
 				//add farUpLeft to result
 				toAdd = this.getLocationAtCoordinates(frX - 2, frY - 2);
 				result.add(toAdd);
-			} else if (upRight != null && upRight.getTeamColor() == CheckerPiece.TEAM1
+			} else if (upRight != null && upRight.getTeamColor() == CheckerPiece.COLOR1
 					&& farUpRight == null
 					&& validCoordinate(frX + 2) && validCoordinate(frY - 2)) {
 				//add farUpRight to result
@@ -430,13 +445,13 @@ public class CheckersModel {
 				result.add(toAdd);
 			} else {
 				if (startPiece.isKing()) {
-					if (downLeft != null && downLeft.getTeamColor() == CheckerPiece.TEAM1
+					if (downLeft != null && downLeft.getTeamColor() == CheckerPiece.COLOR1
 							&& farDownLeft == null
 							&& validCoordinate(frX - 2) && validCoordinate(frY + 2)) {
 						//add farDownLeft to result
 						toAdd = this.getLocationAtCoordinates(frX - 2, frY + 2);
 						result.add(toAdd);
-					} else if (downRight != null && downRight.getTeamColor() == CheckerPiece.TEAM1
+					} else if (downRight != null && downRight.getTeamColor() == CheckerPiece.COLOR1
 							&& farDownRight == null
 							&& validCoordinate(frX + 2) && validCoordinate(frY + 2)) {
 						//add farDownRight to result

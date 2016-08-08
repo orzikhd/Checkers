@@ -108,14 +108,14 @@ public class CheckersPanel extends JPanel {
 			if (currLoc.getPieceTeamColor() != Location.NULL_TEAM_COLOR) {
 				ImageIcon icon = null;
 				//new javax.swing.ImageIcon(getClass().getResource("myimage.jpeg"))
-				if (currLoc.getPieceTeamColor() == 1) {
+				if (currLoc.getPieceTeamColor() == Location.PIECE_COLOR1) {
 					if (currLoc.getIsKing()) {
 						icon = new ImageIcon(getClass().getResource("/Images/BlackCheckerKing.png"));
 					} else {
 						icon = new ImageIcon(getClass().getResource("/Images/BlackChecker.png"));
 					}
 				}
-				if (currLoc.getPieceTeamColor() == 2) {
+				if (currLoc.getPieceTeamColor() == Location.PIECE_COLOR2) {
 					if (currLoc.getIsKing()) {
 						icon = new ImageIcon(getClass().getResource("/Images/RedCheckerKing.png"));
 					} else {

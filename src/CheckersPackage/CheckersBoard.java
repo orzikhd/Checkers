@@ -10,7 +10,8 @@ public class CheckersBoard implements GameBoard {
 	 * for all i, j tiles[i][j] != null
 	 * and tiles[i][j] rep invariant holds true
 	 * and all tiles touching a particular tile have a different color
-	 * from the particular tile
+	 * from that particular tile
+	 * and there are exactly two distinct tile colors in use
 	 */
 	
 	private GameTile[][] tiles;
@@ -20,12 +21,15 @@ public class CheckersBoard implements GameBoard {
 	 * @param length the side length of the square GameBoard
 	 * @param color1 one of two colors to use for the checkered pattern
 	 * @param color2 one of two colors to use for the checkered pattern
-	 * @requires tileColor should be one of the tile color constants available
+	 * @requires color1 and color2 should both be available, distinct tile colors
 	 * 	and length > 0
 	 */
 	public CheckersBoard(int length, String color1, String color2) {
 		if (length <= 0) {
 			throw new IllegalArgumentException("Length of board less than 1");
+		}
+		if (color1.equals(color2)) {
+			throw new IllegalArgumentException("color1 and color2 should be distinct");
 		}
 		this.tiles = new GameTile[length][length];
 		
@@ -57,11 +61,11 @@ public class CheckersBoard implements GameBoard {
 	}
 	
 	/**
-	 * Returns the piece at the given location
-	 * @param x component of location to check
-	 * @param y component of location to check
+	 * Returns the piece at the given coordinates
+	 * @param x coordinate to check
+	 * @param y coordinate to check
 	 * @return GamePiece at the specified location, null if no piece is there
-	 * @requires 0 >= X < length and 0 >= Y < length
+	 * @requires 0 <= x < length && 0 <= y < length
 	 */
 	public GamePiece getPieceAtLocation(int x, int y) {
 		if (x < 0 || x >= this.getLength() || y < 0 || y >= this.getLength()) {
@@ -73,11 +77,11 @@ public class CheckersBoard implements GameBoard {
 	}
 	
 	/**
-	 * Returns the color at the given location
-	 * @param x component of location to check
-	 * @param y component of location to check
-	 * @return String color at the specified location
-	 * @requires 0 >= X < length and 0 >= Y < length
+	 * Returns the tile color at the given coordinates
+	 * @param x coordinate to check
+	 * @param y coordinate to check
+	 * @return String tile color at the specified location
+	 * @requires 0 <= x < length && 0 <= y < length
 	 */
 	public String getColorAtLocation(int x, int y) {
 		if (x < 0 || x >= this.getLength() || y < 0 || y >= this.getLength()) {
@@ -89,11 +93,11 @@ public class CheckersBoard implements GameBoard {
 	}
 	
 	/**
-	 * Places a piece at the given location
-	 * @param x component of the location to place the piece
-	 * @param y component of the location to place the piece
+	 * Places a piece at the given coordinates
+	 * @param x coordinate to place the piece
+	 * @param y coordinate to place the piece
 	 * @param newPiece piece to place at the given location
-	 * @requires 0 >= X < length and 0 >= Y < length
+	 * @requires 0 <= x < length && 0 <= y < length
 	 */
 	public void putPieceAtLocation(int x, int y, GamePiece newPiece) {
 		if (x < 0 || x >= this.getLength() || y < 0 || y >= this.getLength()) {
@@ -112,6 +116,9 @@ public class CheckersBoard implements GameBoard {
 		return this.tiles.length;
 	}
 	
+	/**
+	 * String that represents the CheckersBoard and its contents
+	 */
 	@Override
 	public String toString() {
 		String result = "[\n";

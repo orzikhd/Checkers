@@ -41,7 +41,7 @@ public class GameBoardTest {
 	@Test
 	public void putPieceTest() {
 		GameBoard newBoard = new CheckersBoard(8, "R", "B");
-		newBoard.putPieceAtLocation(7, 2, new CheckerPiece(BiColorPiece.TEAM1));
+		newBoard.putPieceAtLocation(7, 2, new CheckerPiece(BiColorPiece.COLOR1));
 		assertEquals(newBoard.toString(), "[\n"
 				+ "{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}\n"
 				+ "{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}{Color: B Piece: null}{Color: R Piece: null}\n"
@@ -57,7 +57,7 @@ public class GameBoardTest {
 	@Test
 	public void getPieceTest() {
 		GameBoard newBoard = new CheckersBoard(8, "R", "B");
-		GamePiece testPiece = new CheckerPiece(BiColorPiece.TEAM1);
+		GamePiece testPiece = new CheckerPiece(BiColorPiece.COLOR1);
 		newBoard.putPieceAtLocation(7, 2, testPiece);
 		assertEquals(newBoard.getPieceAtLocation(7, 2), testPiece);
 	}

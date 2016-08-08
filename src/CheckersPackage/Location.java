@@ -13,13 +13,23 @@ public class Location {
 	 */
 	
 	/**
-	 * Color for locations where a piece does not exist
+	 * Team for locations where a piece does not exist
 	 */
 	public static final int NULL_TEAM_COLOR = 0;
 	
+	/** 
+	 * Team 1 Designation
+	 */
+	public static final int PIECE_COLOR1 = BiColorPiece.COLOR1;
+	
+	/**
+	 * Team 2 Designation
+	 */
+	public static final int PIECE_COLOR2 = BiColorPiece.COLOR2;
+	
 	private int X;
 	private int Y;
-	private int pieceTeamColor;
+	private int pieceColor;
 	private boolean isKing;
 	private String tileColor;
 	
@@ -39,27 +49,49 @@ public class Location {
 		
 		this.X = X;
 		this.Y = Y;
-		this.pieceTeamColor = pieceTeamColor;
+		this.pieceColor = pieceTeamColor;
 		this.isKing = isKing;
 		this.tileColor = tileColor;
 	}
 	
+	/**
+	 * Returns X Coordinate of this Location.
+	 * @return int value for X coordinate
+	 */
 	public int getX() {
 		return this.X;
 	}
 	
+	/**
+	 * Returns Y Coordinate of this Location.
+	 * @return int value for Y coordinate
+	 */
 	public int getY() {
 		return this.Y;
 	}
 	
+	/**
+	 * Returns this location's piece's color.
+	 * @return one of the piece colors available or the 
+	 * null team color designation if there is no piece
+	 * at this location
+	 */
 	public int getPieceTeamColor() {
-		return this.pieceTeamColor;
+		return this.pieceColor;
 	}
 	
+	/**
+	 * Returns this location's piece's king status
+	 * @return true if the piece is a king piece, false otherwise
+	 */
 	public boolean getIsKing() {
 		return this.isKing;
 	}
 	
+	/**
+	 * Return this location's tile color
+	 * @return String representing this location's tile color
+	 */
 	public String getTileColor() {
 		return this.tileColor;
 	}
@@ -71,7 +103,7 @@ public class Location {
 		}
 		
 		Location o = (Location) other;
-		if (this.X == o.X && this.Y == o.Y && this.pieceTeamColor == o.pieceTeamColor 
+		if (this.X == o.X && this.Y == o.Y && this.pieceColor == o.pieceColor 
 				&& this.isKing == o.isKing && this.tileColor.equals(o.tileColor)) {
 			return true;
 		}
@@ -81,11 +113,11 @@ public class Location {
 	
 	@Override
 	public int hashCode() {
-		return this.X * 13 + this.Y + this.pieceTeamColor * 21 + this.tileColor.hashCode();
+		return this.X * 13 + this.Y + this.pieceColor * 21 + this.tileColor.hashCode();
 	}
 	
 	@Override
 	public String toString() {
-		return "[(" + this.X + "," + this.Y + ") colored " + this.tileColor + " holds " + this.pieceTeamColor + ", isKing: " + this.isKing + "]";
+		return "[(" + this.X + "," + this.Y + ") colored " + this.tileColor + " holds " + this.pieceColor + ", isKing: " + this.isKing + "]";
 	}
 }
